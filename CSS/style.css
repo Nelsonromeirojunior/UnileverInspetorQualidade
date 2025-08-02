@@ -152,3 +152,29 @@ section {
     font-size: 1rem;
   }
 }
+
+.btn-outline-danger {
+  border-color: var(--danger-color);
+  color: var(--danger-color);
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Ajustar espaçamento dos botões */
+.d-md-flex .btn {
+  min-inline-size: 120px;
+}
+
+@media (max-width: 768px) {
+  .d-md-flex {
+    flex-direction: column;
+  }
+
+  .d-md-flex .btn {
+    inline-size: 100%;
+    margin-block-end: 10px;
+  }
+}

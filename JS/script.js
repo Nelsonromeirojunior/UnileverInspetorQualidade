@@ -252,3 +252,43 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+function limparFormulario(formId, resultadoId, detalhesId = null, statusId = null) {
+    // Limpar campos de entrada
+    const form = document.getElementById(formId);
+    form.reset();
+
+    // Esconder resultados
+    const resultado = document.getElementById(resultadoId);
+    resultado.classList.add('d-none');
+
+    // Limpar detalhes se existir
+    if (detalhesId) {
+        document.getElementById(detalhesId).innerHTML = '';
+    }
+
+    // Limpar status se existir
+    if (statusId) {
+        document.getElementById(statusId).innerHTML = '';
+    }
+}
+
+// Adicionar eventos de limpeza no DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Botão Limpar Tara
+    document.getElementById('limparTara').addEventListener('click', function () {
+        limparFormulario('taraForm', 'resultadoTara', 'taraDetails', 'taraRecomendacao');
+    });
+
+    // Botão Limpar Peso
+    document.getElementById('limparPeso').addEventListener('click', function () {
+        limparFormulario('pesoForm', 'resultadoPeso', 'pesoDetails', 'pesoStatus');
+    });
+
+    // Botão Limpar Validade
+    document.getElementById('limparValidade').addEventListener('click', function () {
+        limparFormulario('validadeForm', 'resultadoValidade', 'validadeDetails');
+    });
+
+    // Restante do seu código existente...
+});
