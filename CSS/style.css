@@ -202,7 +202,6 @@ body {
   color: #aaa !important;
 }
 
-/* Ajustes para modo escuro */
 /* Adicione isso no seu arquivo CSS */
 [data-theme="dark"] {
   color: #ffffff !important; /* Força o texto branco no tema escuro */
