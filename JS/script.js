@@ -2,13 +2,71 @@ document.addEventListener('DOMContentLoaded', function () {
     // Atualiza o ano no footer
     document.getElementById('ano-atual').textContent = new Date().getFullYear();
 
+    // Configura o scroll suave e destaque do menu
+    function setupNavigation() {
+        // Atualiza o menu ativo conforme a rolagem
+        function updateActiveMenu() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const scrollPosition = window.scrollY + 100;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Scroll suave para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Atualiza a URL sem recarregar a página
+                    if (history.pushState) {
+                        history.pushState(null, null, targetId);
+                    }
+                }
+            });
+        });
+
+        // Atualiza o menu ao rolar a página
+        window.addEventListener('scroll', updateActiveMenu);
+        updateActiveMenu(); // Chama inicialmente para definir o estado correto
+    }
+
+    setupNavigation();
+
     // Formulário de Tara
     const taraForm = document.getElementById('taraForm');
     if (taraForm) {
         taraForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Obter valores das taras
             const taraValues = [
                 parseFloat(document.getElementById('tara1').value),
                 parseFloat(document.getElementById('tara2').value),
@@ -17,59 +75,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 parseFloat(document.getElementById('tara5').value)
             ];
 
-            // Calcular média
             const somaTara = taraValues.reduce((a, b) => a + b, 0);
             const mediaTara = somaTara / 5;
-
-            // Encontrar a melhor tara (mais próxima da média)
             const melhorTara = taraValues.reduce((prev, curr) =>
                 Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
             );
 
-            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoTara');
             const detailsDiv = document.getElementById('taraDetails');
             const recomendacaoDiv = document.getElementById('taraRecomendacao');
 
-            // Formatar números com 2 casas decimais
             const formatNumber = num => num.toFixed(2).replace('.', ',');
 
             detailsDiv.innerHTML = `
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th>Amostra</th>
-                        <th>Peso (kg)</th>
-                        <th>Diferença da Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${taraValues.map((tara, index) => `
-                        <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
-                            <td>Tara ${index + 1}</td>
-                            <td>${formatNumber(tara)}</td>
-                            <td>${formatNumber(tara - mediaTara)}</td>
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>Amostra</th>
+                            <th>Peso (kg)</th>
+                            <th>Diferença da Média</th>
                         </tr>
-                    `).join('')}
-                    <tr class="table-active">
-                        <td><strong>Total</strong></td>
-                        <td><strong>${formatNumber(somaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr class="table-active">
-                        <td><strong>Média</strong></td>
-                        <td><strong>${formatNumber(mediaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
+                    </thead>
+                    <tbody>
+                        ${taraValues.map((tara, index) => `
+                            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
+                                <td>Tara ${index + 1}</td>
+                                <td>${formatNumber(tara)}</td>
+                                <td>${formatNumber(tara - mediaTara)}</td>
+                            </tr>
+                        `).join('')}
+                        <tr class="table-active">
+                            <td><strong>Total</strong></td>
+                            <td><strong>${formatNumber(somaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr class="table-active">
+                            <td><strong>Média</strong></td>
+                            <td><strong>${formatNumber(mediaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
 
             recomendacaoDiv.innerHTML = `
-            <i class="fas fa-lightbulb me-2"></i>
-            <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
-            (${formatNumber(melhorTara)} kg) como referência, pois é a mais próxima da média calculada.
-        `;
+                <i class="fas fa-lightbulb me-2"></i>
+                <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
+                (${formatNumber(melhorTara)} kg) como referência, pois é a mais próxima da média calculada.
+            `;
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
@@ -83,28 +136,24 @@ document.addEventListener('DOMContentLoaded', function () {
         pesoForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Obter valores dos pesos
-            const peso1 = parseFloat(document.getElementById('peso1').value);
-            const peso2 = parseFloat(document.getElementById('peso2').value);
-            const peso3 = parseFloat(document.getElementById('peso3').value);
-            const peso4 = parseFloat(document.getElementById('peso4').value);
-            const peso5 = parseFloat(document.getElementById('peso5').value);
+            const pesoValues = [
+                parseFloat(document.getElementById('peso1').value),
+                parseFloat(document.getElementById('peso2').value),
+                parseFloat(document.getElementById('peso3').value),
+                parseFloat(document.getElementById('peso4').value),
+                parseFloat(document.getElementById('peso5').value)
+            ];
             const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
 
-            // Calcular média
-            const somaPeso = peso1 + peso2 + peso3 + peso4 + peso5;
+            const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
             const mediaPeso = somaPeso / 5;
-
-            // Verificar se está dentro do padrão (com margem de 1%)
             const margem = pesoPadrao * 0.01;
             const aprovado = Math.abs(mediaPeso - pesoPadrao) <= margem;
 
-            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoPeso');
             const detailsDiv = document.getElementById('pesoDetails');
             const statusDiv = document.getElementById('pesoStatus');
 
-            // Formatar números com 2 casas decimais
             const formatNumber = num => num.toFixed(2).replace('.', ',');
 
             detailsDiv.innerHTML = `
@@ -113,57 +162,46 @@ document.addEventListener('DOMContentLoaded', function () {
                         <tr>
                             <th>Amostra</th>
                             <th>Peso (kg)</th>
+                            <th>Diferença do Padrão</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Peso 01</td>
-                            <td>${formatNumber(peso1)}</td>
-                        </tr>
-                        <tr>
-                            <td>Peso 02</td>
-                            <td>${formatNumber(peso2)}</td>
-                        </tr>
-                        <tr>
-                            <td>Peso 03</td>
-                            <td>${formatNumber(peso3)}</td>
-                        </tr>
-                        <tr>
-                            <td>Peso 04</td>
-                            <td>${formatNumber(peso4)}</td>
-                        </tr>
-                        <tr>
-                            <td>Peso 05</td>
-                            <td>${formatNumber(peso5)}</td>
-                        </tr>
+                        ${pesoValues.map((peso, index) => `
+                            <tr>
+                                <td>Peso ${index + 1}</td>
+                                <td>${formatNumber(peso)}</td>
+                                <td>${formatNumber(peso - pesoPadrao)}</td>
+                            </tr>
+                        `).join('')}
                         <tr class="table-active">
                             <td><strong>Total</strong></td>
                             <td><strong>${formatNumber(somaPeso)}</strong></td>
+                            <td></td>
                         </tr>
                         <tr class="table-active">
                             <td><strong>Média</strong></td>
                             <td><strong>${formatNumber(mediaPeso)}</strong></td>
+                            <td></td>
                         </tr>
                         <tr class="table-active">
                             <td><strong>Padrão Esperado</strong></td>
                             <td><strong>${formatNumber(pesoPadrao)}</strong></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
             `;
 
             if (aprovado) {
-                statusDiv.innerHTML = `<span class="resultado-aprovado"><i class="fas fa-check-circle me-2"></i>PESO APROVADO - Dentro do padrão esperado</span>`;
-                resultadoDiv.style.borderLeftColor = getComputedStyle(document.documentElement).getPropertyValue('--success-color');
+                statusDiv.innerHTML = `<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO - Dentro do padrão esperado</span>`;
+                resultadoDiv.style.borderLeftColor = 'var(--success-color)';
             } else {
-                statusDiv.innerHTML = `<span class="resultado-reprovado"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO - Fora do padrão esperado</span>`;
-                resultadoDiv.style.borderLeftColor = getComputedStyle(document.documentElement).getPropertyValue('--danger-color');
+                statusDiv.innerHTML = `<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO - Fora do padrão esperado</span>`;
+                resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
             }
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
-
-            // Rolagem suave para o resultado
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
@@ -176,22 +214,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const dataProducao = new Date(document.getElementById('dataProducao').value);
             const mesesValidade = parseInt(document.getElementById('mesesValidade').value);
-
-            // Calcular data de validade
             const dataValidade = new Date(dataProducao);
             dataValidade.setMonth(dataValidade.getMonth() + mesesValidade);
 
-            // Verificar se a data de validade é válida
             if (isNaN(dataProducao.getTime()) || isNaN(dataValidade.getTime())) {
                 alert('Por favor, insira uma data válida.');
                 return;
             }
 
-            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoValidade');
             const detailsDiv = document.getElementById('validadeDetails');
 
-            // Formatar datas para o padrão brasileiro
             const formatDate = date => {
                 const day = date.getDate().toString().padStart(2, '0');
                 const month = (date.getMonth() + 1).toString().padStart(2, '0');
@@ -212,83 +245,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
-            resultadoDiv.style.borderLeftColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color');
-
-            // Rolagem suave para o resultado
+            resultadoDiv.style.borderLeftColor = 'var(--primary-color)';
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
 
-    // Scroll suave para as seções
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-
-            if (targetElement) {
-                window.scrollTo({
-                    insetBlockStart: targetElement.offsetTop - 70,
-                    behavior: 'smooth'
-                });
-            }
-        });
-    });
-
-    // Focar no primeiro campo ao carregar a seção
-    const sections = ['tara-section', 'peso-section', 'validade-section'];
-    sections.forEach(section => {
-        const element = document.getElementById(section);
-        if (element) {
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    const firstInput = element.querySelector('input, select');
-                    if (firstInput) firstInput.focus();
-                }
-            }, { threshold: 0.5 });
-
-            observer.observe(element);
-        }
-    });
-});
-
-function limparFormulario(formId, resultadoId, detalhesId = null, statusId = null) {
-    // Limpar campos de entrada
-    const form = document.getElementById(formId);
-    form.reset();
-
-    // Esconder resultados
-    const resultado = document.getElementById(resultadoId);
-    resultado.classList.add('d-none');
-
-    // Limpar detalhes se existir
-    if (detalhesId) {
-        document.getElementById(detalhesId).innerHTML = '';
+    // Funções para limpar formulários
+    function limparFormulario(formId, resultadoId, detalhesId = null, statusId = null) {
+        document.getElementById(formId).reset();
+        document.getElementById(resultadoId).classList.add('d-none');
+        if (detalhesId) document.getElementById(detalhesId).innerHTML = '';
+        if (statusId) document.getElementById(statusId).innerHTML = '';
     }
 
-    // Limpar status se existir
-    if (statusId) {
-        document.getElementById(statusId).innerHTML = '';
-    }
-}
-
-// Adicionar eventos de limpeza no DOMContentLoaded
-document.addEventListener('DOMContentLoaded', function () {
-    // Botão Limpar Tara
     document.getElementById('limparTara').addEventListener('click', function () {
         limparFormulario('taraForm', 'resultadoTara', 'taraDetails', 'taraRecomendacao');
     });
 
-    // Botão Limpar Peso
     document.getElementById('limparPeso').addEventListener('click', function () {
         limparFormulario('pesoForm', 'resultadoPeso', 'pesoDetails', 'pesoStatus');
     });
 
-    // Botão Limpar Validade
     document.getElementById('limparValidade').addEventListener('click', function () {
         limparFormulario('validadeForm', 'resultadoValidade', 'validadeDetails');
     });
-
-    // Restante do seu código existente...
 });

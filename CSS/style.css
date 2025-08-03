@@ -1,20 +1,105 @@
-:root {
+/* Variáveis para tema claro */
+:root,
+[data-theme="light"] {
+  --bg-color: #ffffff;
+  --text-color: #333333;
   --primary-color: #0f0e9a;
   --secondary-color: #0d0c7a;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --warning-color: #ffc107;
-  --light-color: #f8f9fa;
-  --dark-color: #343a40;
+  --card-bg: #f8f9fa;
+  --border-color: #dee2e6;
+  --input-bg: #ffffff;
+  --table-bg: #ffffff;
+  --table-border: #dee2e6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --footer-bg: #343a40;
+  --footer-text: #f8f9fa;
 }
 
+/* Variáveis para tema escuro */
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f8f9fa;
+  --primary-color: #4a5bff;
+  --secondary-color: #3a4bff;
+  --card-bg: #1e1e1e;
+  --border-color: #333333;
+  --input-bg: #2d2d2d;
+  --table-bg: #2d2d2d;
+  --table-border: #444444;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --footer-bg: #1a1a1a;
+  --footer-text: #e9ecef;
+}
+
+/* Aplicação das variáveis */
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fff;
-  color: var(--dark-color);
-  line-height: 1.6;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.theme-header {
+  background-color: var(--primary-color);
+}
+
+.theme-main {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.theme-footer {
+  background-color: var(--footer-bg) !important;
+  color: var(--footer-text) !important;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 0.125rem 0.25rem var(--shadow-color);
+}
+
+.bg-light {
+  background-color: var(--card-bg) !important;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.table {
+  color: var(--text-color);
+  background-color: var(--table-bg);
+}
+
+.table th,
+.table td {
+  border-color: var(--table-border);
+}
+
+.btn-theme-toggle {
+  color: var(--text-color);
+  border-color: var(--text-color);
+}
+
+/* Ícones do tema */
+.light-icon {
+  display: inline-block;
+}
+.dark-icon {
+  display: none;
+}
+
+[data-theme="dark"] .light-icon {
+  display: none;
+}
+[data-theme="dark"] .dark-icon {
+  display: inline-block;
+}
+
+/* Estilos específicos para o sistema */
 .navbar {
   background-color: var(--primary-color) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -36,11 +121,55 @@ body {
 }
 
 .hero-image {
-  max-block-size: 400px;
+  max-block-size: 60vh;
   inline-size: auto;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
+
+@media (max-width: 768px) {
+  .hero-image {
+    max-block-size: 40vh;
+  }
+
+  .display-5 {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-image {
+    max-block-size: 30vh;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+}
+
+.result-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.result-table th,
+.result-table td {
+  padding: 0.75rem;
+  text-align: start;
+  border-block-end: 1px solid var(--table-border);
+}
+
+.result-table th {
+  background-color: rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+.table-active {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-color);
+}
+
 .table-success {
   background-color: rgba(40, 167, 69, 0.1) !important;
 }
@@ -55,104 +184,6 @@ body {
   border-inline-start: 4px solid var(--info-color);
 }
 
-@media (max-width: 768px) {
-  .hero-image {
-    max-block-size: 250px;
-  }
-
-  .display-5 {
-    font-size: 2rem;
-  }
-}
-
-section {
-  scroll-margin-top: 80px;
-}
-
-.card {
-  border: none;
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.btn-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-.btn-primary:hover {
-  background-color: var(--secondary-color);
-  border-color: var(--secondary-color);
-}
-
-/* Estilos para os resultados */
-#resultadoTara,
-#resultadoPeso,
-#resultadoValidade {
-  background-color: var(--light-color);
-  border-inline-start: 4px solid var(--primary-color);
-}
-
-.resultado-aprovado {
-  color: var(--success-color);
-}
-
-.resultado-reprovado {
-  color: var(--danger-color);
-}
-
-.resultado-atencao {
-  color: var(--warning-color);
-}
-
-/* Animações */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fadeIn 0.5s ease-in;
-}
-
-/* Tabela de resultados */
-.result-table {
-  inline-size: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-}
-
-.result-table th,
-.result-table td {
-  padding: 0.75rem;
-  text-align: start;
-  border-block-end: 1px solid #dee2e6;
-}
-
-.result-table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-}
-
-/* Responsividade */
-@media (max-width: 576px) {
-  .card-body {
-    padding: 1rem;
-  }
-
-  .btn-lg {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-  }
-}
-
 .btn-outline-danger {
   border-color: var(--danger-color);
   color: var(--danger-color);
@@ -163,18 +194,37 @@ section {
   color: white;
 }
 
-/* Ajustar espaçamento dos botões */
-.d-md-flex .btn {
-  min-inline-size: 120px;
+.text-muted {
+  color: #6c757d !important;
 }
 
-@media (max-width: 768px) {
-  .d-md-flex {
-    flex-direction: column;
-  }
+[data-theme="dark"] .text-muted {
+  color: #aaa !important;
+}
 
-  .d-md-flex .btn {
-    inline-size: 100%;
-    margin-block-end: 10px;
-  }
+/* Ajustes para modo escuro */
+/* Adicione isso no seu arquivo CSS */
+[data-theme="dark"] {
+  color: #ffffff !important; /* Força o texto branco no tema escuro */
+}
+
+[data-theme="dark"] .text-muted {
+  color: #b0b0b0 !important; /* Texto mais claro para elementos muted */
+}
+
+[data-theme="dark"] .card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .table {
+  color: #ffffff !important; /* Texto branco em cards e tabelas */
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+  color: #ffffff !important; /* Texto branco em inputs */
+  background-color: #2d2d2d;
+}
+
+[data-theme="dark"] .result-table th,
+[data-theme="dark"] .result-table td {
+  color: #ffffff !important; /* Texto branco em tabelas de resultados */
 }
