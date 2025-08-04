@@ -96,80 +96,34 @@
                         <div class="card shadow">
                             <div class="card-body">
                                 <form id="taraForm">
-                                    <div class="row mb-4">
+                                    <p class="text-muted mb-4">Insira os pesos das 5 amostras de tara (Frascos e Tampas com vazia) em
+                                        kg:</p>
+
+                                    <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label class="form-label">Quantidade de Amostras:</label>
-                                            <div class="btn-group w-100" role="group">
-                                                <input type="radio" class="btn-check" name="qtdAmostras" id="5amostras"
-                                                    autocomplete="off" checked>
-                                                <label class="btn btn-outline-primary" for="5amostras">5
-                                                    Amostras</label>
-
-                                                <input type="radio" class="btn-check" name="qtdAmostras" id="10amostras"
-                                                    autocomplete="off">
-                                                <label class="btn btn-outline-primary" for="10amostras">10
-                                                    Amostras</label>
-                                            </div>
+                                            <label for="tara1" class="form-label">Tara Amostra 01 (kg)</label>
+                                            <input type="number" step="0.01" class="form-control tara-input" id="tara1"
+                                                required>
                                         </div>
-                                    </div>
-
-                                    <div id="taraInputsContainer">
-                                        <!-- Campos para 5 amostras -->
-                                        <div class="row g-3" id="5amostrasFields">
-                                            <div class="col-md-6">
-                                                <label for="tara1" class="form-label">Tara Amostra 01 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara1" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara2" class="form-label">Tara Amostra 02 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara2" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara3" class="form-label">Tara Amostra 03 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara3" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara4" class="form-label">Tara Amostra 04 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara4" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara5" class="form-label">Tara Amostra 05 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara5" required>
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label for="tara2" class="form-label">Tara Amostra 02 (kg)</label>
+                                            <input type="number" step="0.01" class="form-control tara-input" id="tara2"
+                                                required>
                                         </div>
-
-                                        <!-- Campos adicionais para 10 amostras -->
-                                        <div class="row g-3 mt-3 d-none" id="10amostrasFields">
-                                            <div class="col-md-6">
-                                                <label for="tara6" class="form-label">Tara Amostra 06 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara6">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara7" class="form-label">Tara Amostra 07 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara7">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara8" class="form-label">Tara Amostra 08 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara8">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara9" class="form-label">Tara Amostra 09 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara9">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="tara10" class="form-label">Tara Amostra 10 (kg)</label>
-                                                <input type="number" step="0.01" class="form-control tara-input"
-                                                    id="tara10">
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label for="tara3" class="form-label">Tara Amostra 03 (kg)</label>
+                                            <input type="number" step="0.01" class="form-control tara-input" id="tara3"
+                                                required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="tara4" class="form-label">Tara Amostra 04 (kg)</label>
+                                            <input type="number" step="0.01" class="form-control tara-input" id="tara4"
+                                                required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="tara5" class="form-label">Tara Amostra 05 (kg)</label>
+                                            <input type="number" step="0.01" class="form-control tara-input" id="tara5"
+                                                required>
                                         </div>
                                     </div>
 

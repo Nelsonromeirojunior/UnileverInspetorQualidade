@@ -62,121 +62,73 @@ document.addEventListener('DOMContentLoaded', function () {
     setupNavigation();
 
     // Formulário de Tara
-    // No seu script.js, adicione:
-    // Controle de exibição dos campos de tara
-    document.querySelectorAll('input[name="qtdAmostras"]').forEach(radio => {
-        radio.addEventListener('change', function () {
-            const show10Amostras = this.id === '10amostras';
-            document.getElementById('10amostrasFields').classList.toggle('d-none', !show10Amostras);
-
-            // Tornar obrigatórios ou não os campos adicionais
-            for (let i = 6; i <= 10; i++) {
-                const input = document.getElementById(`tara${i}`);
-                input.required = show10Amostras;
-                if (!show10Amostras) input.value = ''; // Limpar se não for usar
-            }
-        });
-    });
-
-    // Formulário de Tara Atualizado
     const taraForm = document.getElementById('taraForm');
     if (taraForm) {
         taraForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const use10Amostras = document.getElementById('10amostras').checked;
-            const numAmostras = use10Amostras ? 10 : 5;
-            const taraValues = [];
+            const taraValues = [
+                parseFloat(document.getElementById('tara1').value),
+                parseFloat(document.getElementById('tara2').value),
+                parseFloat(document.getElementById('tara3').value),
+                parseFloat(document.getElementById('tara4').value),
+                parseFloat(document.getElementById('tara5').value)
+            ];
 
-            // Coletar valores
-            for (let i = 1; i <= numAmostras; i++) {
-                const value = parseFloat(document.getElementById(`tara${i}`).value);
-                if (isNaN(value)) {
-                    alert(`Por favor, preencha o valor da Tara Amostra ${i}.`);
-                    return;
-                }
-                taraValues.push(value);
-            }
-
-            // Calcular média
             const somaTara = taraValues.reduce((a, b) => a + b, 0);
-            const mediaTara = somaTara / numAmostras;
-
-            // Encontrar a melhor tara (mais próxima da média)
+            const mediaTara = somaTara / 5;
             const melhorTara = taraValues.reduce((prev, curr) =>
                 Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
             );
 
-            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoTara');
             const detailsDiv = document.getElementById('taraDetails');
             const recomendacaoDiv = document.getElementById('taraRecomendacao');
 
-            // Formatar números com 2 casas decimais
             const formatNumber = num => num.toFixed(2).replace('.', ',');
 
-            // Gerar linhas da tabela dinamicamente
-            const tableRows = taraValues.map((tara, index) => `
-            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
-                <td>Tara ${index + 1}</td>
-                <td>${formatNumber(tara)}</td>
-                <td>${formatNumber(tara - mediaTara)}</td>
-            </tr>
-        `).join('');
-
             detailsDiv.innerHTML = `
-            <div class="mb-3">Número de Amostras: <strong>${numAmostras}</strong></div>
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th>Amostra</th>
-                        <th>Peso (kg)</th>
-                        <th>Diferença da Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tableRows}
-                    <tr class="table-active">
-                        <td><strong>Total</strong></td>
-                        <td><strong>${formatNumber(somaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr class="table-active">
-                        <td><strong>Média</strong></td>
-                        <td><strong>${formatNumber(mediaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>Amostra</th>
+                            <th>Peso (kg)</th>
+                            <th>Diferença da Média</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${taraValues.map((tara, index) => `
+                            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
+                                <td>Tara ${index + 1}</td>
+                                <td>${formatNumber(tara)}</td>
+                                <td>${formatNumber(tara - mediaTara)}</td>
+                            </tr>
+                        `).join('')}
+                        <tr class="table-active">
+                            <td><strong>Total</strong></td>
+                            <td><strong>${formatNumber(somaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr class="table-active">
+                            <td><strong>Média</strong></td>
+                            <td><strong>${formatNumber(mediaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
 
             recomendacaoDiv.innerHTML = `
-            <i class="fas fa-lightbulb me-2"></i>
-            <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
-            (${formatNumber(melhorTara)} kg) como referência, pois é a mais próxima da média calculada.
-        `;
+                <i class="fas fa-lightbulb me-2"></i>
+                <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
+                (${formatNumber(melhorTara)} kg) como referência, pois é a mais próxima da média calculada.
+            `;
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
-
-    // Função Limpar Tara Atualizada
-    document.getElementById('limparTara').addEventListener('click', function () {
-        // Limpa todos os campos de tara (1-10)
-        for (let i = 1; i <= 10; i++) {
-            document.getElementById(`tara${i}`).value = '';
-        }
-        // Volta para 5 amostras padrão
-        document.getElementById('5amostras').checked = true;
-        document.getElementById('10amostrasFields').classList.add('d-none');
-
-        // Limpa resultados
-        document.getElementById('resultadoTara').classList.add('d-none');
-        document.getElementById('taraDetails').innerHTML = '';
-        document.getElementById('taraRecomendacao').innerHTML = '';
-    });
 
     // Formulário de Peso
     const pesoForm = document.getElementById('pesoForm');
