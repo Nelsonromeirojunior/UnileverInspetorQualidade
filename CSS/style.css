@@ -227,3 +227,29 @@ body {
 [data-theme="dark"] .result-table td {
   color: #ffffff !important; /* Texto branco em tabelas de resultados */
 }
+
+/* Estilo para o código de validade */
+#codigoValidade {
+  transition: all 0.3s ease;
+  font-family: "Courier New", monospace;
+}
+
+/* Ajustes para alertas */
+.alert {
+  border-inline-start: 4px solid transparent;
+}
+
+.alert-danger {
+  border-inline-start-color: var(--danger-color);
+}
+
+.alert-success {
+  border-inline-start-color: var(--success-color);
+}
+
+/* Ajuste para mobile */
+@media (max-width: 768px) {
+  #codigoValidade .display-4 {
+    font-size: 2.5rem;
+  }
+}

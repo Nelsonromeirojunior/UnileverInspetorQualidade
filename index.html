@@ -96,7 +96,8 @@
                         <div class="card shadow">
                             <div class="card-body">
                                 <form id="taraForm">
-                                    <p class="text-muted mb-4">Insira os pesos das 5 amostras de tara (Frascos e Tampas com vazia) em
+                                    <p class="text-muted mb-4">Insira os pesos das 5 amostras de tara (Frascos e Tampas
+                                        com vazia) em
                                         kg:</p>
 
                                     <div class="row g-3">
@@ -228,12 +229,62 @@
                                 <form id="validadeForm">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="dataProducao" class="form-label">Data de Produção</label>
-                                            <input type="date" class="form-control" id="dataProducao" required>
+                                            <label for="tipoProduto" class="form-label">Tipo de Produto</label>
+                                            <select class="form-select" id="tipoProduto" required>
+                                                <option value="" selected disabled>Selecione</option>
+                                                <option value="Hair">Hair</option>
+                                                <option value="Deo">Deo</option>
+                                                <option value="HC">HC</option>
+                                            </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="mesesValidade" class="form-label">Validade em Meses</label>
-                                            <select class="form-select" id="mesesValidade" required>
+                                            <label for="linhaProducao" class="form-label">Linha de Produção</label>
+                                            <select class="form-select" id="linhaProducao" required disabled>
+                                                <option value="" selected disabled>Selecione o tipo primeiro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="mesProducao" class="form-label">Mês de Produção</label>
+                                            <select class="form-select" id="mesProducao" required>
+                                                <option value="" selected disabled>Selecione</option>
+                                                <option value="1">Janeiro</option>
+                                                <option value="2">Fevereiro</option>
+                                                <option value="3">Março</option>
+                                                <option value="4">Abril</option>
+                                                <option value="5">Maio</option>
+                                                <option value="6">Junho</option>
+                                                <option value="7">Julho</option>
+                                                <option value="8">Agosto</option>
+                                                <option value="9">Setembro</option>
+                                                <option value="10">Outubro</option>
+                                                <option value="11">Novembro</option>
+                                                <option value="12">Dezembro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="anoProducao" class="form-label">Ano de Produção</label>
+                                            <select class="form-select" id="anoProducao" required>
+                                                <option value="" selected disabled>Selecione</option>
+                                                <option value="2021">2021</option>
+                                                <option value="2022">2022</option>
+                                                <option value="2023">2023</option>
+                                                <option value="2024">2024</option>
+                                                <option value="2025">2025</option>
+                                                <option value="2026">2026</option>
+                                                <option value="2027">2027</option>
+                                                <option value="2028">2028</option>
+                                                <option value="2029">2029</option>
+                                                <option value="2030">2030</option>
+                                                <option value="2031">2031</option>
+                                                <option value="2032">2032</option>
+                                                <option value="2033">2033</option>
+                                                <option value="2034">2034</option>
+                                                <option value="2035">2035</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="validadeMeses" class="form-label">Validade (meses)</label>
+                                            <select class="form-select" id="validadeMeses" required>
                                                 <option value="" selected disabled>Selecione</option>
                                                 <option value="16">16 meses</option>
                                                 <option value="18">18 meses</option>
@@ -258,6 +309,8 @@
                                     <h5 class="mb-3"><i class="fas fa-clipboard-check me-2"></i>Resultado da Verificação
                                         de Validade</h5>
                                     <div id="validadeDetails"></div>
+                                    <div id="validadeStatus" class="mt-3 fw-bold"></div>
+                                    <div id="codigoValidade" class="mt-3 p-3 bg-light rounded text-center"></div>
                                 </div>
                             </div>
                         </div>

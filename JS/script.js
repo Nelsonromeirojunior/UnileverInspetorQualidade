@@ -207,66 +207,168 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Formulário de Validade
+    // Mapeamento de letras
+    const mapeamentoLetras = {
+        // Linhas de produção
+        linhas: {
+            Hair: {
+                "S01": "A", "S03": "B", "S05": "C", "S08": "D",
+                "S10": "E", "S11": "F", "S12": "G", "S14": "H"
+            },
+            Deo: {
+                "D11": "K", "D12": "L"
+            },
+            HC: {
+                "A01": "M", "A02": "T", "A03": "O", "A04": "P",
+                "A07": "S", "A06": "X", "A08": "Z"
+            }
+        },
+
+        // Meses
+        meses: {
+            1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F",
+            7: "G", 8: "H", 9: "I", 10: "J", 11: "K", 12: "L"
+        },
+
+        // Anos
+        anos: {
+            2021: "E", 2022: "F", 2023: "G", 2024: "H", 2025: "I",
+            2026: "J", 2027: "K", 2028: "L", 2029: "M", 2030: "N",
+            2031: "O", 2032: "P", 2033: "Q", 2034: "R", 2035: "S"
+        }
+    };
+
+    // Carregar linhas de produção conforme tipo selecionado
+    document.getElementById('tipoProduto').addEventListener('change', function () {
+        const tipo = this.value;
+        const linhaSelect = document.getElementById('linhaProducao');
+
+        linhaSelect.innerHTML = '<option value="" selected disabled>Selecione</option>';
+        linhaSelect.disabled = !tipo;
+
+        if (tipo) {
+            const linhas = mapeamentoLetras.linhas[tipo];
+            for (const [codigo, letra] of Object.entries(linhas)) {
+                const option = document.createElement('option');
+                option.value = codigo;
+                option.textContent = `${codigo} (${letra})`;
+                linhaSelect.appendChild(option);
+            }
+        }
+    });
+
+    // Formulário de Validade Atualizado
     const validadeForm = document.getElementById('validadeForm');
     if (validadeForm) {
         validadeForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const dataProducao = new Date(document.getElementById('dataProducao').value);
-            const mesesValidade = parseInt(document.getElementById('mesesValidade').value);
-            const dataValidade = new Date(dataProducao);
-            dataValidade.setMonth(dataValidade.getMonth() + mesesValidade);
+            // Obter valores
+            const tipoProduto = document.getElementById('tipoProduto').value;
+            const linhaProducao = document.getElementById('linhaProducao').value;
+            const mesProducao = parseInt(document.getElementById('mesProducao').value);
+            const anoProducao = parseInt(document.getElementById('anoProducao').value);
+            const validadeMeses = parseInt(document.getElementById('validadeMeses').value);
 
-            if (isNaN(dataProducao.getTime()) || isNaN(dataValidade.getTime())) {
-                alert('Por favor, insira uma data válida.');
+            // Validar dados
+            if (!tipoProduto || !linhaProducao || isNaN(mesProducao) || isNaN(anoProducao) || isNaN(validadeMeses)) {
+                alert('Por favor, preencha todos os campos.');
                 return;
             }
 
+            // Calcular data de validade
+            const dataProducao = new Date(anoProducao, mesProducao - 1);
+            const dataValidade = new Date(dataProducao);
+            dataValidade.setMonth(dataValidade.getMonth() + validadeMeses);
+
+            // Verificar se a validade já expirou
+            const hoje = new Date();
+            const expirado = dataValidade < hoje;
+
+            // Obter letras do código
+            const letraLinha = mapeamentoLetras.linhas[tipoProduto][linhaProducao];
+            const letraMes = mapeamentoLetras.meses[mesProducao];
+            const letraAno = mapeamentoLetras.anos[anoProducao];
+            const codigoValidade = `${letraLinha}${letraMes}${letraAno}`;
+
+            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoValidade');
             const detailsDiv = document.getElementById('validadeDetails');
+            const statusDiv = document.getElementById('validadeStatus');
+            const codigoDiv = document.getElementById('codigoValidade');
 
-            const formatDate = date => {
-                const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            // Formatar datas
+            const formatDate = (date) => {
+                const month = date.getMonth() + 1;
                 const year = date.getFullYear();
-                return `${day}/${month}/${year}`;
+                return `${month.toString().padStart(2, '0')}/${year}`;
             };
 
             detailsDiv.innerHTML = `
-                <div class="mb-2"><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</div>
-                <div class="mb-2"><strong>Validade:</strong> ${mesesValidade} meses</div>
-                <div class="mb-3"><strong>Data de Validade Calculada:</strong> ${formatDate(dataValidade)}</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Tipo de Produto:</strong> ${tipoProduto}</p>
+                    <p><strong>Linha de Produção:</strong> ${linhaProducao} (${letraLinha})</p>
+                    <p><strong>Mês/Ano Produção:</strong> ${formatDate(dataProducao)}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Validade:</strong> ${validadeMeses} meses</p>
+                    <p><strong>Data Validade:</strong> ${formatDate(dataValidade)}</p>
+                    <p><strong>Status:</strong> ${expirado ? 'Expirado' : 'Válido'}</p>
+                </div>
+            </div>
+        `;
 
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    O produto estará válido até <strong>${formatDate(dataValidade)}</strong>
+            codigoDiv.innerHTML = `
+            <h6>Código de Validade</h6>
+            <div class="display-4 fw-bold">${codigoValidade}</div>
+            <small>${letraLinha} (Linha) + ${letraMes} (Mês) + ${letraAno} (Ano)</small>
+        `;
+
+            if (expirado) {
+                statusDiv.innerHTML = `
+                <div class="alert alert-danger d-flex align-items-center">
+                    <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1">REPROVADO - CRQS/PQS</h5>
+                        <p class="mb-0">Produto com validade expirada. Bloquear lote.</p>
+                    </div>
                 </div>
             `;
+                codigoDiv.classList.add('bg-danger', 'text-white');
+                codigoDiv.classList.remove('bg-light');
+            } else {
+                statusDiv.innerHTML = `
+                <div class="alert alert-success d-flex align-items-center">
+                    <i class="fas fa-check-circle me-3 fs-4"></i>
+                    <div>
+                        <h5 class="alert-heading mb-1">APROVADO</h5>
+                        <p class="mb-0">Produto dentro do prazo de validade.</p>
+                    </div>
+                </div>
+            `;
+                codigoDiv.classList.add('bg-success', 'text-white');
+                codigoDiv.classList.remove('bg-light');
+            }
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
-            resultadoDiv.style.borderLeftColor = 'var(--primary-color)';
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
 
-    // Funções para limpar formulários
-    function limparFormulario(formId, resultadoId, detalhesId = null, statusId = null) {
-        document.getElementById(formId).reset();
-        document.getElementById(resultadoId).classList.add('d-none');
-        if (detalhesId) document.getElementById(detalhesId).innerHTML = '';
-        if (statusId) document.getElementById(statusId).innerHTML = '';
-    }
-
-    document.getElementById('limparTara').addEventListener('click', function () {
-        limparFormulario('taraForm', 'resultadoTara', 'taraDetails', 'taraRecomendacao');
-    });
-
-    document.getElementById('limparPeso').addEventListener('click', function () {
-        limparFormulario('pesoForm', 'resultadoPeso', 'pesoDetails', 'pesoStatus');
-    });
-
+    // Função Limpar Validade
     document.getElementById('limparValidade').addEventListener('click', function () {
-        limparFormulario('validadeForm', 'resultadoValidade', 'validadeDetails');
+        document.getElementById('validadeForm').reset();
+        document.getElementById('linhaProducao').disabled = true;
+        document.getElementById('linhaProducao').innerHTML = '<option value="" selected disabled>Selecione o tipo primeiro</option>';
+
+        const resultadoDiv = document.getElementById('resultadoValidade');
+        resultadoDiv.classList.add('d-none');
+        resultadoDiv.querySelector('#validadeDetails').innerHTML = '';
+        resultadoDiv.querySelector('#validadeStatus').innerHTML = '';
+        resultadoDiv.querySelector('#codigoValidade').innerHTML = '';
+        resultadoDiv.querySelector('#codigoValidade').classList.remove('bg-danger', 'bg-success', 'text-white');
+        resultadoDiv.querySelector('#codigoValidade').classList.add('bg-light');
     });
 });
