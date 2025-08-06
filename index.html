@@ -274,68 +274,85 @@
                                 <form id="validadeForm">
                                     <div class="row g-3">
                                         <div class="col-md-6">
-                                            <label for="tipoProduto" class="form-label">Tipo de Produto</label>
-                                            <select class="form-select" id="tipoProduto" required>
-                                                <option value="" selected disabled>Selecione</option>
-                                                <option value="Hair">Hair</option>
-                                                <option value="Deo">Deo</option>
-                                                <option value="HC">HC</option>
+                                            <label for="linhaProduto" class="form-label">Linha de Produção</label>
+                                            <select class="form-select" id="linhaProduto" required>
+                                                <option value="" selected disabled>Selecione a Linha</option>
+                                                <optgroup label="Hair">
+                                                    <option value="S01">S01 (A)</option>
+                                                    <option value="S03">S03 (B)</option>
+                                                    <option value="S05">S05 (C)</option>
+                                                    <option value="S08">S08 (D)</option>
+                                                    <option value="S10">S10 (E)</option>
+                                                    <option value="S11">S11 (F)</option>
+                                                    <option value="S12">S12 (G)</option>
+                                                    <option value="S14">S14 (H)</option>
+                                                </optgroup>
+                                                <optgroup label="Deo">
+                                                    <option value="D11">D11 (K)</option>
+                                                    <option value="D12">D12 (L)</option>
+                                                </optgroup>
+                                                <optgroup label="HC">
+                                                    <option value="A01">A01 (M)</option>
+                                                    <option value="A02">A02 (T)</option>
+                                                    <option value="A03">A03 (O)</option>
+                                                    <option value="A04">A04 (P)</option>
+                                                    <option value="A07">A07 (S)</option>
+                                                    <option value="A06">A06 (X)</option>
+                                                    <option value="A08">A08 (Z)</option>
+                                                </optgroup>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="linhaProducao" class="form-label">Linha de Produção</label>
-                                            <select class="form-select" id="linhaProducao" required disabled>
-                                                <option value="" selected disabled>Selecione o tipo primeiro</option>
+                                            <label for="mesValidade" class="form-label">Mês de Produção</label>
+                                            <select class="form-select" id="mesValidade" required>
+                                                <option value="" selected disabled>Selecione o Mês</option>
+                                                <option value="1">Janeiro (A)</option>
+                                                <option value="2">Fevereiro (B)</option>
+                                                <option value="3">Março (C)</option>
+                                                <option value="4">Abril (D)</option>
+                                                <option value="5">Maio (E)</option>
+                                                <option value="6">Junho (F)</option>
+                                                <option value="7">Julho (G)</option>
+                                                <option value="8">Agosto (H)</option>
+                                                <option value="9">Setembro (I)</option>
+                                                <option value="10">Outubro (J)</option>
+                                                <option value="11">Novembro (K)</option>
+                                                <option value="12">Dezembro (L)</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="mesProducao" class="form-label">Mês de Produção</label>
-                                            <select class="form-select" id="mesProducao" required>
-                                                <option value="" selected disabled>Selecione</option>
-                                                <option value="1">Janeiro</option>
-                                                <option value="2">Fevereiro</option>
-                                                <option value="3">Março</option>
-                                                <option value="4">Abril</option>
-                                                <option value="5">Maio</option>
-                                                <option value="6">Junho</option>
-                                                <option value="7">Julho</option>
-                                                <option value="8">Agosto</option>
-                                                <option value="9">Setembro</option>
-                                                <option value="10">Outubro</option>
-                                                <option value="11">Novembro</option>
-                                                <option value="12">Dezembro</option>
+                                            <label for="anoValidade" class="form-label">Ano de Produção</label>
+                                            <select class="form-select" id="anoValidade" required>
+                                                <option value="" selected disabled>Selecione o Ano</option>
+                                                <option value="2021">2021 (E)</option>
+                                                <option value="2022">2022 (F)</option>
+                                                <option value="2023">2023 (G)</option>
+                                                <option value="2024">2024 (H)</option>
+                                                <option value="2025">2025 (I)</option>
+                                                <option value="2026">2026 (J)</option>
+                                                <option value="2027">2027 (K)</option>
+                                                <option value="2028">2028 (L)</option>
+                                                <option value="2029">2029 (M)</option>
+                                                <option value="2030">2030 (N)</option>
+                                                <option value="2031">2031 (O)</option>
+                                                <option value="2032">2032 (P)</option>
+                                                <option value="2033">2033 (Q)</option>
+                                                <option value="2034">2034 (R)</option>
+                                                <option value="2035">2035 (S)</option>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="anoProducao" class="form-label">Ano de Produção</label>
-                                            <select class="form-select" id="anoProducao" required>
-                                                <option value="" selected disabled>Selecione</option>
-                                                <option value="2021">2021</option>
-                                                <option value="2022">2022</option>
-                                                <option value="2023">2023</option>
-                                                <option value="2024">2024</option>
-                                                <option value="2025">2025</option>
-                                                <option value="2026">2026</option>
-                                                <option value="2027">2027</option>
-                                                <option value="2028">2028</option>
-                                                <option value="2029">2029</option>
-                                                <option value="2030">2030</option>
-                                                <option value="2031">2031</option>
-                                                <option value="2032">2032</option>
-                                                <option value="2033">2033</option>
-                                                <option value="2034">2034</option>
-                                                <option value="2035">2035</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="validadeMeses" class="form-label">Validade (meses)</label>
-                                            <select class="form-select" id="validadeMeses" required>
-                                                <option value="" selected disabled>Selecione</option>
+                                            <label for="tempoValidade" class="form-label">Validade (meses)</label>
+                                            <select class="form-select" id="tempoValidade" required>
                                                 <option value="16">16 meses</option>
                                                 <option value="18">18 meses</option>
                                                 <option value="24">24 meses</option>
                                                 <option value="36">36 meses</option>
                                             </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="horaProducao" class="form-label">Horário de Produção</label>
+                                            <input type="time" class="form-control" id="horaProducao" required>
                                         </div>
                                     </div>
 
@@ -345,7 +362,7 @@
                                             <i class="fas fa-broom me-2"></i>Limpar
                                         </button>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-calculator me-2"></i>Calcular
+                                            <i class="fas fa-calculator me-2"></i>Calcular Validade
                                         </button>
                                     </div>
                                 </form>
@@ -355,7 +372,7 @@
                                         de Validade</h5>
                                     <div id="validadeDetails"></div>
                                     <div id="validadeStatus" class="mt-3 fw-bold"></div>
-                                    <div id="codigoValidade" class="mt-3 p-3 bg-light rounded text-center"></div>
+                                    <div id="codigoValidade" class="mt-3 p-3 bg-light rounded"></div>
                                 </div>
                             </div>
                         </div>

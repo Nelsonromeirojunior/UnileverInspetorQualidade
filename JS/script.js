@@ -256,53 +256,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // Formulário de Validade
     // Mapeamento de letras
     const mapeamentoLetras = {
-        // Linhas de produção
+        // Linhas de Produção
         linhas: {
-            Hair: {
-                "S01": "A", "S03": "B", "S05": "C", "S08": "D",
-                "S10": "E", "S11": "F", "S12": "G", "S14": "H"
-            },
-            Deo: {
-                "D11": "K", "D12": "L"
-            },
-            HC: {
-                "A01": "M", "A02": "T", "A03": "O", "A04": "P",
-                "A07": "S", "A06": "X", "A08": "Z"
-            }
+            'S01': 'A', 'S03': 'B', 'S05': 'C', 'S08': 'D', 'S10': 'E',
+            'S11': 'F', 'S12': 'G', 'S14': 'H', 'D11': 'K', 'D12': 'L',
+            'A01': 'M', 'A02': 'T', 'A03': 'O', 'A04': 'P', 'A07': 'S',
+            'A06': 'X', 'A08': 'Z'
         },
 
         // Meses
         meses: {
-            1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F",
-            7: "G", 8: "H", 9: "I", 10: "J", 11: "K", 12: "L"
+            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F',
+            7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'
         },
 
         // Anos
         anos: {
-            2021: "E", 2022: "F", 2023: "G", 2024: "H", 2025: "I",
-            2026: "J", 2027: "K", 2028: "L", 2029: "M", 2030: "N",
-            2031: "O", 2032: "P", 2033: "Q", 2034: "R", 2035: "S"
+            2021: 'E', 2022: 'F', 2023: 'G', 2024: 'H', 2025: 'I',
+            2026: 'J', 2027: 'K', 2028: 'L', 2029: 'M', 2030: 'N',
+            2031: 'O', 2032: 'P', 2033: 'Q', 2034: 'R', 2035: 'S'
         }
     };
-
-    // Carregar linhas de produção conforme tipo selecionado
-    document.getElementById('tipoProduto').addEventListener('change', function () {
-        const tipo = this.value;
-        const linhaSelect = document.getElementById('linhaProducao');
-
-        linhaSelect.innerHTML = '<option value="" selected disabled>Selecione</option>';
-        linhaSelect.disabled = !tipo;
-
-        if (tipo) {
-            const linhas = mapeamentoLetras.linhas[tipo];
-            for (const [codigo, letra] of Object.entries(linhas)) {
-                const option = document.createElement('option');
-                option.value = codigo;
-                option.textContent = `${codigo} (${letra})`;
-                linhaSelect.appendChild(option);
-            }
-        }
-    });
 
     // Formulário de Validade Atualizado
     const validadeForm = document.getElementById('validadeForm');
@@ -311,32 +285,38 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             // Obter valores
-            const tipoProduto = document.getElementById('tipoProduto').value;
-            const linhaProducao = document.getElementById('linhaProducao').value;
-            const mesProducao = parseInt(document.getElementById('mesProducao').value);
-            const anoProducao = parseInt(document.getElementById('anoProducao').value);
-            const validadeMeses = parseInt(document.getElementById('validadeMeses').value);
+            const linha = document.getElementById('linhaProduto').value;
+            const mes = parseInt(document.getElementById('mesValidade').value);
+            const ano = parseInt(document.getElementById('anoValidade').value);
+            const tempoValidade = parseInt(document.getElementById('tempoValidade').value);
+            const hora = document.getElementById('horaProducao').value;
 
             // Validar dados
-            if (!tipoProduto || !linhaProducao || isNaN(mesProducao) || isNaN(anoProducao) || isNaN(validadeMeses)) {
+            if (!linha || !mes || !ano || !hora) {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
 
             // Calcular data de validade
-            const dataProducao = new Date(anoProducao, mesProducao - 1);
+            const dataProducao = new Date(ano, mes - 1, 1);
             const dataValidade = new Date(dataProducao);
-            dataValidade.setMonth(dataValidade.getMonth() + validadeMeses);
+            dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
 
-            // Verificar se a validade já expirou
+            // Verificar se está dentro do padrão (comparar com data atual)
             const hoje = new Date();
-            const expirado = dataValidade < hoje;
+            const aprovado = dataValidade > hoje;
 
-            // Obter letras do código
-            const letraLinha = mapeamentoLetras.linhas[tipoProduto][linhaProducao];
-            const letraMes = mapeamentoLetras.meses[mesProducao];
-            const letraAno = mapeamentoLetras.anos[anoProducao];
-            const codigoValidade = `${letraLinha}${letraMes}${letraAno}`;
+            // Gerar código de validade
+            const letraLinha = mapeamentoLetras.linhas[linha];
+            const letraMes = mapeamentoLetras.meses[mes];
+            const letraAno = mapeamentoLetras.anos[ano];
+
+            // Extrair dia e hora formatada
+            const dia = dataProducao.getDate().toString().padStart(2, '0');
+            const horaFormatada = hora.replace(':', '');
+
+            // Gerar código completo
+            const codigoValidade = `V:${dataValidade.getFullYear()}-${(dataValidade.getMonth() + 1).toString().padStart(2, '0')} L:V${letraLinha}${letraMes}${dia}${horaFormatada}${letraAno}`;
 
             // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoValidade');
@@ -346,58 +326,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Formatar datas
             const formatDate = (date) => {
-                const month = date.getMonth() + 1;
-                const year = date.getFullYear();
-                return `${month.toString().padStart(2, '0')}/${year}`;
+                const mes = (date.getMonth() + 1).toString().padStart(2, '0');
+                return `${mes}/${date.getFullYear()}`;
             };
 
             detailsDiv.innerHTML = `
             <div class="row">
                 <div class="col-md-6">
-                    <p><strong>Tipo de Produto:</strong> ${tipoProduto}</p>
-                    <p><strong>Linha de Produção:</strong> ${linhaProducao} (${letraLinha})</p>
-                    <p><strong>Mês/Ano Produção:</strong> ${formatDate(dataProducao)}</p>
+                    <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
+                    <p><strong>Validade:</strong> ${tempoValidade} meses</p>
+                    <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
                 </div>
                 <div class="col-md-6">
-                    <p><strong>Validade:</strong> ${validadeMeses} meses</p>
-                    <p><strong>Data Validade:</strong> ${formatDate(dataValidade)}</p>
-                    <p><strong>Status:</strong> ${expirado ? 'Expirado' : 'Válido'}</p>
+                    <p><strong>Linha:</strong> ${linha} (${letraLinha})</p>
+                    <p><strong>Mês:</strong> ${mes} (${letraMes})</p>
+                    <p><strong>Ano:</strong> ${ano} (${letraAno})</p>
                 </div>
             </div>
         `;
 
-            codigoDiv.innerHTML = `
-            <h6>Código de Validade</h6>
-            <div class="display-4 fw-bold">${codigoValidade}</div>
-            <small>${letraLinha} (Linha) + ${letraMes} (Mês) + ${letraAno} (Ano)</small>
-        `;
-
-            if (expirado) {
-                statusDiv.innerHTML = `
-                <div class="alert alert-danger d-flex align-items-center">
-                    <i class="fas fa-exclamation-triangle me-3 fs-4"></i>
-                    <div>
-                        <h5 class="alert-heading mb-1">REPROVADO - CRQS/PQS</h5>
-                        <p class="mb-0">Produto com validade expirada. Bloquear lote.</p>
-                    </div>
-                </div>
-            `;
-                codigoDiv.classList.add('bg-danger', 'text-white');
-                codigoDiv.classList.remove('bg-light');
+            if (aprovado) {
+                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PRODUTO APROVADO - Dentro do prazo de validade</span>';
+                resultadoDiv.style.borderLeftColor = 'var(--success-color)';
             } else {
-                statusDiv.innerHTML = `
-                <div class="alert alert-success d-flex align-items-center">
-                    <i class="fas fa-check-circle me-3 fs-4"></i>
-                    <div>
-                        <h5 class="alert-heading mb-1">APROVADO</h5>
-                        <p class="mb-0">Produto dentro do prazo de validade.</p>
-                    </div>
-                </div>
-            `;
-                codigoDiv.classList.add('bg-success', 'text-white');
-                codigoDiv.classList.remove('bg-light');
+                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO - Fora do prazo de validade (CRQS/PQS)</span>';
+                resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
             }
 
+            codigoDiv.textContent = codigoValidade;
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -407,15 +363,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função Limpar Validade
     document.getElementById('limparValidade').addEventListener('click', function () {
         document.getElementById('validadeForm').reset();
-        document.getElementById('linhaProducao').disabled = true;
-        document.getElementById('linhaProducao').innerHTML = '<option value="" selected disabled>Selecione o tipo primeiro</option>';
-
-        const resultadoDiv = document.getElementById('resultadoValidade');
-        resultadoDiv.classList.add('d-none');
-        resultadoDiv.querySelector('#validadeDetails').innerHTML = '';
-        resultadoDiv.querySelector('#validadeStatus').innerHTML = '';
-        resultadoDiv.querySelector('#codigoValidade').innerHTML = '';
-        resultadoDiv.querySelector('#codigoValidade').classList.remove('bg-danger', 'bg-success', 'text-white');
-        resultadoDiv.querySelector('#codigoValidade').classList.add('bg-light');
+        document.getElementById('resultadoValidade').classList.add('d-none');
+        document.getElementById('validadeDetails').innerHTML = '';
+        document.getElementById('validadeStatus').innerHTML = '';
+        document.getElementById('codigoValidade').textContent = '';
     });
 });

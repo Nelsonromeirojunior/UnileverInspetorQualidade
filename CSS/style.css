@@ -230,51 +230,34 @@ body {
 
 /* Estilo para o código de validade */
 #codigoValidade {
-  transition: all 0.3s ease;
-  font-family: "Courier New", monospace;
+  font-family: monospace;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  border-left: 4px solid var(--primary-color);
 }
 
-/* Ajustes para alertas */
-.alert {
-  border-inline-start: 4px solid transparent;
+/* Estilo para grupos de opções */
+optgroup {
+  font-weight: bold;
+  font-style: normal;
+  color: var(--primary-color);
 }
 
-.alert-danger {
-  border-inline-start-color: var(--danger-color);
+optgroup option {
+  font-weight: normal;
+  color: var(--text-color);
 }
 
-.alert-success {
-  border-inline-start-color: var(--success-color);
+/* Ajustes para o status */
+#validadeStatus {
+  padding: 10px;
+  border-radius: 4px;
 }
 
-/* Ajuste para mobile */
-@media (max-width: 768px) {
-  #codigoValidade .display-4 {
-    font-size: 2.5rem;
-  }
+.text-success {
+  color: var(--success-color) !important;
 }
 
-/* Estilo para os botões de seleção de amostras */
-.btn-group .btn {
-  flex: 1;
-  transition: all 0.3s ease;
-}
-
-.btn-check:checked + .btn-outline-primary {
-  background-color: var(--primary-color);
-  color: white;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 0.25rem rgba(15, 14, 154, 0.25);
-}
-
-/* Ajuste para mobile */
-@media (max-width: 576px) {
-  .btn-group {
-    flex-direction: column;
-  }
-
-  .btn-group .btn {
-    inline-size: 100%;
-    margin-block-end: 5px;
-  }
+.text-danger {
+  color: var(--danger-color) !important;
 }
