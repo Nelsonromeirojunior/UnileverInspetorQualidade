@@ -2,14 +2,59 @@ document.addEventListener('DOMContentLoaded', function () {
     // Atualiza o ano no footer
     document.getElementById('ano-atual').textContent = new Date().getFullYear();
 
-    // Configura o scroll suave e destaque do menu
+    // Mapeamento de letras para validade
+    const mapeamentoLetras = {
+        // Linhas de Produção
+        linhas: {
+            'S01': 'A', 'S03': 'B', 'S05': 'C', 'S08': 'D', 'S10': 'E',
+            'S11': 'F', 'S12': 'G', 'S14': 'H', 'D11': 'K', 'D12': 'L',
+            'A01': 'M', 'A02': 'T', 'A03': 'O', 'A04': 'P', 'A07': 'S',
+            'A06': 'X', 'A08': 'Z'
+        },
+
+        // Meses
+        meses: {
+            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F',
+            7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'
+        },
+
+        // Anos
+        anos: {
+            2021: 'E', 2022: 'F', 2023: 'G', 2024: 'H', 2025: 'I',
+            2026: 'J', 2027: 'K', 2028: 'L', 2029: 'M', 2030: 'N',
+            2031: 'O', 2032: 'P', 2033: 'Q', 2034: 'R', 2035: 'S'
+        }
+    };
+
+    // ==================== CONTROLE DE TEMA ====================
+    const themeToggle = document.getElementById('themeToggle');
+    const themeLabel = document.querySelector('.theme-label');
+    const html = document.documentElement;
+
+    function applyTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeLabel.textContent = theme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
+    }
+
+    // Verificar preferência de tema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('theme');
+    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
+
+    themeToggle.addEventListener('click', () => {
+        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+    });
+
+    // ==================== NAVEGAÇÃO ====================
     function setupNavigation() {
-        // Atualiza o menu ativo conforme a rolagem
+        // Atualiza menu ativo conforme scroll
         function updateActiveMenu() {
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
-
             let current = '';
+
             sections.forEach(section => {
                 const sectionTop = section.offsetTop;
                 const sectionHeight = section.clientHeight;
@@ -28,56 +73,48 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Scroll suave para links internos
+        // Scroll suave
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return;
-
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
                     const navbarHeight = document.querySelector('.navbar').offsetHeight;
-                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
 
                     window.scrollTo({
                         top: targetPosition,
                         behavior: 'smooth'
                     });
 
-                    // Atualiza a URL sem recarregar a página
                     if (history.pushState) {
-                        history.pushState(null, null, targetId);
+                        history.pushState(null, null, this.getAttribute('href'));
                     }
                 }
             });
         });
 
-        // Atualiza o menu ao rolar a página
         window.addEventListener('scroll', updateActiveMenu);
-        updateActiveMenu(); // Chama inicialmente para definir o estado correto
+        updateActiveMenu();
     }
-
     setupNavigation();
 
-    // Formulário de Tara
-    // Controle de exibição dos campos de tara
+    // ==================== TARA ====================
+    // Controle de exibição dos campos
     document.querySelectorAll('input[name="qtdAmostras"]').forEach(radio => {
         radio.addEventListener('change', function () {
             const show10Amostras = this.id === '10amostras';
             document.getElementById('10amostrasFields').classList.toggle('d-none', !show10Amostras);
 
-            // Tornar obrigatórios ou não os campos adicionais
             for (let i = 6; i <= 10; i++) {
                 const input = document.getElementById(`tara${i}`);
                 input.required = show10Amostras;
-                if (!show10Amostras) input.value = ''; // Limpar se não for usar
+                if (!show10Amostras) input.value = '';
             }
         });
     });
 
-    // Formulário de Tara Atualizado
+    // Formulário de Tara
     const taraForm = document.getElementById('taraForm');
     if (taraForm) {
         taraForm.addEventListener('submit', function (e) {
@@ -101,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const somaTara = taraValues.reduce((a, b) => a + b, 0);
             const mediaTara = somaTara / numAmostras;
 
-            // Encontrar a melhor tara (mais próxima da média)
+            // Encontrar melhor tara
             const melhorTara = taraValues.reduce((prev, curr) =>
                 Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
             );
@@ -111,49 +148,45 @@ document.addEventListener('DOMContentLoaded', function () {
             const detailsDiv = document.getElementById('taraDetails');
             const recomendacaoDiv = document.getElementById('taraRecomendacao');
 
-            // Formatar números com 2 casas decimais
             const formatNumber = num => num.toFixed(2).replace('.', ',');
 
-            // Gerar linhas da tabela dinamicamente
-            const tableRows = taraValues.map((tara, index) => `
-            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
-                <td>Tara ${index + 1}</td>
-                <td>${formatNumber(tara)}</td>
-                <td>${formatNumber(tara - mediaTara)}</td>
-            </tr>
-        `).join('');
-
             detailsDiv.innerHTML = `
-            <div class="mb-3">Número de Amostras: <strong>${numAmostras}</strong></div>
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th>Amostra</th>
-                        <th>Peso (kg)</th>
-                        <th>Diferença da Média</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${tableRows}
-                    <tr class="table-active">
-                        <td><strong>Total</strong></td>
-                        <td><strong>${formatNumber(somaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr class="table-active">
-                        <td><strong>Média</strong></td>
-                        <td><strong>${formatNumber(mediaTara)}</strong></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
+                <div class="mb-3">Número de Amostras: <strong>${numAmostras}</strong></div>
+                <table class="result-table">
+                    <thead>
+                        <tr>
+                            <th>Amostra</th>
+                            <th>Peso (kg)</th>
+                            <th>Diferença da Média</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${taraValues.map((tara, index) => `
+                            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
+                                <td>Tara ${index + 1}</td>
+                                <td>${formatNumber(tara)}</td>
+                                <td>${formatNumber(tara - mediaTara)}</td>
+                            </tr>
+                        `).join('')}
+                        <tr class="table-active">
+                            <td><strong>Total</strong></td>
+                            <td><strong>${formatNumber(somaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr class="table-active">
+                            <td><strong>Média</strong></td>
+                            <td><strong>${formatNumber(mediaTara)}</strong></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
 
             recomendacaoDiv.innerHTML = `
-            <i class="fas fa-lightbulb me-2"></i>
-            <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
-            (${formatNumber(melhorTara)} kg) como referência, pois é a mais próxima da média calculada.
-        `;
+                <i class="fas fa-lightbulb me-2"></i>
+                <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
+                (${formatNumber(melhorTara)} kg) como referência.
+            `;
 
             resultadoDiv.classList.remove('d-none');
             resultadoDiv.classList.add('fade-in');
@@ -161,23 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Função Limpar Tara Atualizada
-    document.getElementById('limparTara').addEventListener('click', function () {
-        // Limpa todos os campos de tara (1-10)
-        for (let i = 1; i <= 10; i++) {
-            document.getElementById(`tara${i}`).value = '';
-        }
-        // Volta para 5 amostras padrão
-        document.getElementById('5amostras').checked = true;
-        document.getElementById('10amostrasFields').classList.add('d-none');
-
-        // Limpa resultados
-        document.getElementById('resultadoTara').classList.add('d-none');
-        document.getElementById('taraDetails').innerHTML = '';
-        document.getElementById('taraRecomendacao').innerHTML = '';
-    });
-
-    // Formulário de Peso
+    // ==================== PESO ====================
     const pesoForm = document.getElementById('pesoForm');
     if (pesoForm) {
         pesoForm.addEventListener('submit', function (e) {
@@ -192,11 +209,19 @@ document.addEventListener('DOMContentLoaded', function () {
             ];
             const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
 
+            // Validar
+            if (pesoValues.some(isNaN) || isNaN(pesoPadrao)) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            // Calcular
             const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
             const mediaPeso = somaPeso / 5;
             const margem = pesoPadrao * 0.01;
             const aprovado = Math.abs(mediaPeso - pesoPadrao) <= margem;
 
+            // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoPeso');
             const detailsDiv = document.getElementById('pesoDetails');
             const statusDiv = document.getElementById('pesoStatus');
@@ -240,10 +265,10 @@ document.addEventListener('DOMContentLoaded', function () {
             `;
 
             if (aprovado) {
-                statusDiv.innerHTML = `<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO - Dentro do padrão esperado</span>`;
+                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO</span>';
                 resultadoDiv.style.borderLeftColor = 'var(--success-color)';
             } else {
-                statusDiv.innerHTML = `<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO - Fora do padrão esperado</span>`;
+                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO</span>';
                 resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
             }
 
@@ -253,70 +278,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Formulário de Validade
-    // Mapeamento de letras
-    const mapeamentoLetras = {
-        // Linhas de Produção
-        linhas: {
-            'S01': 'A', 'S03': 'B', 'S05': 'C', 'S08': 'D', 'S10': 'E',
-            'S11': 'F', 'S12': 'G', 'S14': 'H', 'D11': 'K', 'D12': 'L',
-            'A01': 'M', 'A02': 'T', 'A03': 'O', 'A04': 'P', 'A07': 'S',
-            'A06': 'X', 'A08': 'Z'
-        },
-
-        // Meses
-        meses: {
-            1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F',
-            7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'
-        },
-
-        // Anos
-        anos: {
-            2021: 'E', 2022: 'F', 2023: 'G', 2024: 'H', 2025: 'I',
-            2026: 'J', 2027: 'K', 2028: 'L', 2029: 'M', 2030: 'N',
-            2031: 'O', 2032: 'P', 2033: 'Q', 2034: 'R', 2035: 'S'
-        }
-    };
-
-    // Formulário de Validade Atualizado
+    // ==================== VALIDADE ====================
     const validadeForm = document.getElementById('validadeForm');
     if (validadeForm) {
         validadeForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            // Obter valores
             const linha = document.getElementById('linhaProduto').value;
             const mes = parseInt(document.getElementById('mesValidade').value);
             const ano = parseInt(document.getElementById('anoValidade').value);
             const tempoValidade = parseInt(document.getElementById('tempoValidade').value);
             const hora = document.getElementById('horaProducao').value;
 
-            // Validar dados
+            // Validar
             if (!linha || !mes || !ano || !hora) {
                 alert('Por favor, preencha todos os campos.');
                 return;
             }
 
-            // Calcular data de validade
-            const dataProducao = new Date(ano, mes - 1, 1);
+            // Calcular datas
+            const hoje = new Date();
+            const diaAtual = hoje.getDate();
+            const dataProducao = new Date(ano, mes - 1, diaAtual);
             const dataValidade = new Date(dataProducao);
             dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
 
-            // Verificar se está dentro do padrão (comparar com data atual)
-            const hoje = new Date();
+            // Verificar validade
             const aprovado = dataValidade > hoje;
 
-            // Gerar código de validade
+            // Gerar código
             const letraLinha = mapeamentoLetras.linhas[linha];
             const letraMes = mapeamentoLetras.meses[mes];
             const letraAno = mapeamentoLetras.anos[ano];
-
-            // Extrair dia e hora formatada
-            const dia = dataProducao.getDate().toString().padStart(2, '0');
             const horaFormatada = hora.replace(':', '');
 
-            // Gerar código completo
-            const codigoValidade = `V:${dataValidade.getFullYear()}-${(dataValidade.getMonth() + 1).toString().padStart(2, '0')} L:V${letraLinha}${letraMes}${dia}${horaFormatada}${letraAno}`;
+            const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaAtual.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
 
             // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoValidade');
@@ -324,32 +320,31 @@ document.addEventListener('DOMContentLoaded', function () {
             const statusDiv = document.getElementById('validadeStatus');
             const codigoDiv = document.getElementById('codigoValidade');
 
-            // Formatar datas
             const formatDate = (date) => {
                 const mes = (date.getMonth() + 1).toString().padStart(2, '0');
                 return `${mes}/${date.getFullYear()}`;
             };
 
             detailsDiv.innerHTML = `
-            <div class="row">
-                <div class="col-md-6">
-                    <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
-                    <p><strong>Validade:</strong> ${tempoValidade} meses</p>
-                    <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
+                        <p><strong>Validade:</strong> ${tempoValidade} meses</p>
+                        <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Linha:</strong> ${linha} (${letraLinha})</p>
+                        <p><strong>Mês:</strong> ${mes} (${letraMes})</p>
+                        <p><strong>Ano:</strong> ${ano} (${letraAno})</p>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Linha:</strong> ${linha} (${letraLinha})</p>
-                    <p><strong>Mês:</strong> ${mes} (${letraMes})</p>
-                    <p><strong>Ano:</strong> ${ano} (${letraAno})</p>
-                </div>
-            </div>
-        `;
+            `;
 
             if (aprovado) {
-                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PRODUTO APROVADO - Dentro do prazo de validade</span>';
+                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PRODUTO APROVADO</span>';
                 resultadoDiv.style.borderLeftColor = 'var(--success-color)';
             } else {
-                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO - Fora do prazo de validade (CRQS/PQS)</span>';
+                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO (CRQS/PQS)</span>';
                 resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
             }
 
@@ -360,12 +355,26 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Função Limpar Validade
+    // ==================== FUNÇÕES LIMPAR ====================
+    document.getElementById('limparTara').addEventListener('click', function () {
+        for (let i = 1; i <= 10; i++) {
+            document.getElementById(`tara${i}`).value = '';
+        }
+        document.getElementById('5amostras').checked = true;
+        document.getElementById('10amostrasFields').classList.add('d-none');
+        document.getElementById('resultadoTara').classList.add('d-none');
+    });
+
+    document.getElementById('limparPeso').addEventListener('click', function () {
+        for (let i = 1; i <= 5; i++) {
+            document.getElementById(`peso${i}`).value = '';
+        }
+        document.getElementById('pesoPadrao').value = '';
+        document.getElementById('resultadoPeso').classList.add('d-none');
+    });
+
     document.getElementById('limparValidade').addEventListener('click', function () {
         document.getElementById('validadeForm').reset();
         document.getElementById('resultadoValidade').classList.add('d-none');
-        document.getElementById('validadeDetails').innerHTML = '';
-        document.getElementById('validadeStatus').innerHTML = '';
-        document.getElementById('codigoValidade').textContent = '';
     });
 });
