@@ -195,6 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // ==================== PESO ====================
+    // Formulário de Peso Atualizado
     const pesoForm = document.getElementById('pesoForm');
     if (pesoForm) {
         pesoForm.addEventListener('submit', function (e) {
@@ -218,8 +219,12 @@ document.addEventListener('DOMContentLoaded', function () {
             // Calcular
             const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
             const mediaPeso = somaPeso / 5;
+            const diferenca = mediaPeso - pesoPadrao; // Diferença entre MÉDIA e Padrão
             const margem = pesoPadrao * 0.01;
-            const aprovado = Math.abs(mediaPeso - pesoPadrao) <= margem;
+
+            // Verificar aprovação
+            const aprovado = Math.abs(diferenca) <= margem;
+            const precisaAjuste = Math.abs(diferenca) > margem;
 
             // Exibir resultados
             const resultadoDiv = document.getElementById('resultadoPeso');
@@ -229,40 +234,39 @@ document.addEventListener('DOMContentLoaded', function () {
             const formatNumber = num => num.toFixed(2).replace('.', ',');
 
             detailsDiv.innerHTML = `
-                <table class="result-table">
-                    <thead>
+            <table class="result-table">
+                <thead>
+                    <tr>
+                        <th>Amostra</th>
+                        <th>Peso (kg)</th>
+                        <th>Diferença</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${pesoValues.map((peso, index) => `
                         <tr>
-                            <th>Amostra</th>
-                            <th>Peso (kg)</th>
-                            <th>Diferença do Padrão</th>
+                            <td>Peso ${index + 1}</td>
+                            <td>${formatNumber(peso)}</td>
+                            <td>${formatNumber(peso - pesoPadrao)}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        ${pesoValues.map((peso, index) => `
-                            <tr>
-                                <td>Peso ${index + 1}</td>
-                                <td>${formatNumber(peso)}</td>
-                                <td>${formatNumber(peso - pesoPadrao)}</td>
-                            </tr>
-                        `).join('')}
-                        <tr class="table-active">
-                            <td><strong>Total</strong></td>
-                            <td><strong>${formatNumber(somaPeso)}</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr class="table-active">
-                            <td><strong>Média</strong></td>
-                            <td><strong>${formatNumber(mediaPeso)}</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr class="table-active">
-                            <td><strong>Padrão Esperado</strong></td>
-                            <td><strong>${formatNumber(pesoPadrao)}</strong></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
+                    `).join('')}
+                    <tr class="table-active">
+                        <td><strong>Média</strong></td>
+                        <td><strong>${formatNumber(mediaPeso)}</strong></td>
+                        <td></td>
+                    </tr>
+                    <tr class="table-active">
+                        <td><strong>Padrão Esperado</strong></td>
+                        <td><strong>${formatNumber(pesoPadrao)}</strong></td>
+                        <td></td>
+                    </tr>
+                    <tr class="${diferenca > 0 ? 'table-warning' : 'table-info'}">
+                        <td><strong>Diferença (Média - Padrão)</strong></td>
+                        <td colspan="2"><strong>${formatNumber(diferenca)} kg</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
 
             if (aprovado) {
                 statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO</span>';
@@ -270,6 +274,18 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO</span>';
                 resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
+            }
+
+            // Alerta para operador
+            if (precisaAjuste) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-warning mt-3';
+                alertDiv.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>ATENÇÃO OPERADOR:</strong> Diferença de ${formatNumber(diferenca)} kg.
+                ${diferenca > 0 ? 'Reduzir peso na máquina' : 'Aumentar peso na máquina'}.
+            `;
+                detailsDiv.appendChild(alertDiv);
             }
 
             resultadoDiv.classList.remove('d-none');

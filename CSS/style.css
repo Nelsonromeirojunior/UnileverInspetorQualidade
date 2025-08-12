@@ -127,6 +127,31 @@ body {
   box-shadow: 0 4px 8px var(--shadow-color);
 }
 
+/* Adicione ao seu arquivo style.css */
+.table-warning {
+  background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+.table-warning td {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+.table-info {
+  background-color: rgba(23, 162, 184, 0.1) !important;
+}
+
+.table-info td {
+  color: #17a2b8;
+  font-weight: bold;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-inline-start: 4px solid #ffc107;
+  color: #ffc107;
+}
+
 @media (max-width: 768px) {
   .hero-image {
     max-block-size: 40vh;
@@ -233,7 +258,7 @@ body {
   font-family: monospace;
   font-size: 1.1rem;
   letter-spacing: 1px;
-  border-left: 4px solid var(--primary-color);
+  border-inline-start: 4px solid var(--primary-color);
 }
 
 /* Estilo para grupos de opções */
