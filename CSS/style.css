@@ -286,3 +286,33 @@ optgroup option {
 .text-danger {
   color: var(--danger-color) !important;
 }
+
+/* Estilos para a calculadora */
+#calculadora-section .card,
+#variantes-section .card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.alert-success {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-inline-start: 4px solid #28a745;
+}
+
+.alert-info {
+  background-color: rgba(23, 162, 184, 0.1);
+  border-inline-start: 4px solid #17a2b8;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.1);
+  border-inline-start: 4px solid #ffc107;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  #calculadora-section .card-body,
+  #variantes-section .card-body {
+    padding: 1rem;
+  }
+}

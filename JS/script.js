@@ -394,3 +394,137 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('resultadoValidade').classList.add('d-none');
     });
 });
+document.addEventListener('DOMContentLoaded', function () {
+    // ==================== CALCULADORA DE TANQUE ====================
+    const calculadoraForm = document.getElementById('calculadoraForm');
+    if (calculadoraForm) {
+        calculadoraForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const massaTanque = parseFloat(document.getElementById('massaTanque').value);
+            const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
+            const tipoEmbalagem = document.getElementById('tipoEmbalagem').value;
+            const quantidadeEmbalagem = parseInt(document.getElementById('quantidadeEmbalagem').value);
+
+            if (isNaN(massaTanque) || isNaN(pesoPadrao) || isNaN(quantidadeEmbalagem) || pesoPadrao <= 0) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            // Cálculos
+            const totalUnidades = Math.floor(massaTanque / pesoPadrao);
+            const totalEmbalagens = Math.floor(totalUnidades / quantidadeEmbalagem);
+            const unidadesRestantes = totalUnidades % quantidadeEmbalagem;
+
+            // Nomes das embalagens
+            const nomesEmbalagem = {
+                'frasco': 'Frasco(s)',
+                'tampa': 'Tampa(s)',
+                'bandeja': 'Bandeja(s)',
+                'caixa': 'Caixa(s)',
+                'palete': 'Palete(s)'
+            };
+
+            const resultadoDiv = document.getElementById('resultadoCalculadora');
+            const detailsDiv = document.getElementById('calculadoraDetails');
+
+            const formatNumber = num => num.toFixed(0).replace('.', ',');
+
+            detailsDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Massa no Tanque:</strong> ${massaTanque.toFixed(3)} kg</p>
+                        <p><strong>Peso Padrão:</strong> ${pesoPadrao.toFixed(3)} kg</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Total de Unidades:</strong> ${formatNumber(totalUnidades)}</p>
+                        <p><strong>${nomesEmbalagem[tipoEmbalagem]}:</strong> ${formatNumber(totalEmbalagens)}</p>
+                        ${unidadesRestantes > 0 ? `<p><strong>Unidades Restantes:</strong> ${formatNumber(unidadesRestantes)}</p>` : ''}
+                    </div>
+                </div>
+                <div class="alert alert-success mt-3">
+                    <i class="fas fa-boxes me-2"></i>
+                    <strong>Produção:</strong> ${formatNumber(totalEmbalagens)} ${nomesEmbalagem[tipoEmbalagem]}
+                    + ${formatNumber(unidadesRestantes)} unidades avulsas
+                </div>
+            `;
+
+            resultadoDiv.classList.remove('d-none');
+            resultadoDiv.classList.add('fade-in');
+        });
+    }
+
+    // ==================== TROCA DE VARIANTE ====================
+    const varianteForm = document.getElementById('varianteForm');
+    if (varianteForm) {
+        varianteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const varianteAtual = document.getElementById('varianteAtual').value;
+            const varianteNova = document.getElementById('varianteNova').value;
+            const massaDisponivel = parseFloat(document.getElementById('massaDisponivel').value);
+            const tempoTroca = parseInt(document.getElementById('tempoTroca').value);
+
+            if (!varianteAtual || !varianteNova || isNaN(massaDisponivel) || isNaN(tempoTroca)) {
+                alert('Por favor, preencha todos os campos corretamente.');
+                return;
+            }
+
+            // Pesos padrão por variante (kg)
+            const pesosVariantes = {
+                '300ml': 0.175,
+                '500ml': 0.285,
+                '750ml': 0.425,
+                '1L': 0.560
+            };
+
+            const pesoAtual = pesosVariantes[varianteAtual];
+            const pesoNovo = pesosVariantes[varianteNova];
+
+            const unidadesNovas = Math.floor(massaDisponivel / pesoNovo);
+            const diferencaPeso = pesoNovo - pesoAtual;
+
+            const resultadoDiv = document.getElementById('resultadoVariante');
+            const detailsDiv = document.getElementById('varianteDetails');
+            const tempoDiv = document.getElementById('varianteTempo');
+
+            detailsDiv.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Variante Atual:</strong> ${varianteAtual}</p>
+                        <p><strong>Peso Unitário:</strong> ${pesoAtual.toFixed(3)} kg</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Nova Variante:</strong> ${varianteNova}</p>
+                        <p><strong>Peso Unitário:</strong> ${pesoNovo.toFixed(3)} kg</p>
+                    </div>
+                </div>
+                <div class="alert ${diferencaPeso > 0 ? 'alert-warning' : 'alert-info'} mt-3">
+                    <i class="fas ${diferencaPeso > 0 ? 'fa-arrow-up' : 'fa-arrow-down'} me-2"></i>
+                    <strong>Diferença de Peso:</strong> ${Math.abs(diferencaPeso).toFixed(3)} kg
+                    (${diferencaPeso > 0 ? 'aumento' : 'redução'})
+                </div>
+            `;
+
+            tempoDiv.innerHTML = `
+                <i class="fas fa-clock me-2"></i>
+                <strong>Tempo de Troca:</strong> ${tempoTroca} minutos |
+                <strong>Produção Nova:</strong> ${unidadesNovas} unidades
+            `;
+
+            resultadoDiv.classList.remove('d-none');
+            resultadoDiv.classList.add('fade-in');
+        });
+    }
+
+    // ==================== FUNÇÕES LIMPAR ====================
+    document.getElementById('limparCalculadora')?.addEventListener('click', function () {
+        document.getElementById('calculadoraForm').reset();
+        document.getElementById('resultadoCalculadora').classList.add('d-none');
+    });
+
+    document.getElementById('limparVariante')?.addEventListener('click', function () {
+        document.getElementById('varianteForm').reset();
+        document.getElementById('resultadoVariante').classList.add('d-none');
+    });
+});
