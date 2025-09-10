@@ -99,6 +99,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     setupNavigation();
 
+    // ==================== FUNÇÕES DE VALIDAÇÃO ====================
+    function validarNumero(valor, nome) {
+        if (isNaN(valor) || valor < 0) {
+            throw new Error(`${nome} deve ser um número válido e não negativo.`);
+        }
+    }
+
+    function formatarNumero(num) {
+        return num.toFixed(2).replace('.', ',');
+    }
+
+    function mostrarAlerta(tipo, titulo, mensagem) {
+        const alertaDiv = document.createElement('div');
+        alertaDiv.className = `alert alert-${tipo} mt-3`;
+        alertaDiv.innerHTML = `
+            <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+            <strong>${titulo}:</strong> ${mensagem}
+        `;
+        return alertaDiv;
+    }
+
     // ==================== TARA ====================
     // Controle de exibição dos campos
     document.querySelectorAll('input[name="qtdAmostras"]').forEach(radio => {
@@ -120,177 +141,225 @@ document.addEventListener('DOMContentLoaded', function () {
         taraForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const use10Amostras = document.getElementById('10amostras').checked;
-            const numAmostras = use10Amostras ? 10 : 5;
-            const taraValues = [];
+            try {
+                const use10Amostras = document.getElementById('10amostras').checked;
+                const numAmostras = use10Amostras ? 10 : 5;
+                const taraValues = [];
 
-            // Coletar valores
-            for (let i = 1; i <= numAmostras; i++) {
-                const value = parseFloat(document.getElementById(`tara${i}`).value);
-                if (isNaN(value)) {
-                    alert(`Por favor, preencha o valor da Tara Amostra ${i}.`);
-                    return;
+                // Coletar valores
+                for (let i = 1; i <= numAmostras; i++) {
+                    const valor = parseFloat(document.getElementById(`tara${i}`).value);
+                    validarNumero(valor, `Tara Amostra ${i}`);
+                    taraValues.push(valor);
                 }
-                taraValues.push(value);
-            }
 
-            // Calcular média
-            const somaTara = taraValues.reduce((a, b) => a + b, 0);
-            const mediaTara = somaTara / numAmostras;
+                // Verificar se há pelo menos uma amostra
+                if (taraValues.length === 0) {
+                    throw new Error('É necessário inserir pelo menos uma amostra.');
+                }
 
-            // Encontrar melhor tara
-            const melhorTara = taraValues.reduce((prev, curr) =>
-                Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
-            );
+                // Calcular média
+                const somaTara = taraValues.reduce((a, b) => a + b, 0);
+                const mediaTara = somaTara / numAmostras;
 
-            // Exibir resultados
-            const resultadoDiv = document.getElementById('resultadoTara');
-            const detailsDiv = document.getElementById('taraDetails');
-            const recomendacaoDiv = document.getElementById('taraRecomendacao');
+                // Encontrar melhor tara (mais próxima da média)
+                const melhorTara = taraValues.reduce((prev, curr) =>
+                    Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
+                );
 
-            const formatNumber = num => num.toFixed(2).replace('.', ',');
+                // Calcular desvio padrão
+                const variancia = taraValues.reduce((acc, curr) => acc + Math.pow(curr - mediaTara, 2), 0) / numAmostras;
+                const desvioPadrao = Math.sqrt(variancia);
 
-            detailsDiv.innerHTML = `
-                <div class="mb-3">Número de Amostras: <strong>${numAmostras}</strong></div>
-                <table class="result-table">
-                    <thead>
-                        <tr>
-                            <th>Amostra</th>
-                            <th>Peso (kg)</th>
-                            <th>Diferença da Média</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${taraValues.map((tara, index) => `
-                            <tr ${tara === melhorTara ? 'class="table-success"' : ''}>
-                                <td>Tara ${index + 1}</td>
-                                <td>${formatNumber(tara)}</td>
-                                <td>${formatNumber(tara - mediaTara)}</td>
+                // Exibir resultados
+                const resultadoDiv = document.getElementById('resultadoTara');
+                const detailsDiv = document.getElementById('taraDetails');
+                const recomendacaoDiv = document.getElementById('taraRecomendacao');
+
+                detailsDiv.innerHTML = `
+                    <div class="mb-3">
+                        <strong>Número de Amostras:</strong> ${numAmostras}<br>
+                        <strong>Desvio Padrão:</strong> ${formatarNumero(desvioPadrao)} kg
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Amostra</th>
+                                <th>Peso (kg)</th>
+                                <th>Diferença da Média</th>
+                                <th>Status</th>
                             </tr>
-                        `).join('')}
-                        <tr class="table-active">
-                            <td><strong>Total</strong></td>
-                            <td><strong>${formatNumber(somaTara)}</strong></td>
-                            <td></td>
-                        </tr>
-                        <tr class="table-active">
-                            <td><strong>Média</strong></td>
-                            <td><strong>${formatNumber(mediaTara)}</strong></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
+                        </thead>
+                        <tbody>
+                            ${taraValues.map((tara, index) => {
+                    const diferenca = tara - mediaTara;
+                    const isRecomendada = tara === melhorTara;
+                    return `
+                                    <tr ${isRecomendada ? 'class="table-success"' : ''}>
+                                        <td>Tara ${index + 1}</td>
+                                        <td>${formatarNumero(tara)}</td>
+                                        <td>${diferenca >= 0 ? '+' : ''}${formatarNumero(diferenca)}</td>
+                                        <td>${isRecomendada ? '<i class="fas fa-star text-warning"></i> Recomendada' : ''}</td>
+                                    </tr>
+                                `;
+                }).join('')}
+                            <tr class="table-active">
+                                <td><strong>Total</strong></td>
+                                <td><strong>${formatarNumero(somaTara)}</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="table-active">
+                                <td><strong>Média</strong></td>
+                                <td><strong>${formatarNumero(mediaTara)}</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
 
-            recomendacaoDiv.innerHTML = `
-                <i class="fas fa-lightbulb me-2"></i>
-                <strong>Recomendação:</strong> Utilize a Tara ${taraValues.indexOf(melhorTara) + 1}
-                (${formatNumber(melhorTara)} kg) como referência.
-            `;
+                const indiceTara = taraValues.indexOf(melhorTara) + 1;
+                const qualidadeAvaliacao = desvioPadrao < 0.01 ? 'Excelente' :
+                    desvioPadrao < 0.03 ? 'Boa' : 'Precisa melhorar';
 
-            resultadoDiv.classList.remove('d-none');
-            resultadoDiv.classList.add('fade-in');
-            resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                recomendacaoDiv.innerHTML = `
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Recomendação:</strong> Utilize a Tara ${indiceTara}
+                    (${formatarNumero(melhorTara)} kg) como referência.<br>
+                    <strong>Qualidade das amostras:</strong> ${qualidadeAvaliacao}
+                    (Desvio: ${formatarNumero(desvioPadrao)} kg)
+                `;
+
+                resultadoDiv.classList.remove('d-none');
+                resultadoDiv.classList.add('fade-in');
+                resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
+            }
         });
     }
 
     // ==================== PESO ====================
-    // Formulário de Peso Atualizado
     const pesoForm = document.getElementById('pesoForm');
     if (pesoForm) {
         pesoForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const pesoValues = [
-                parseFloat(document.getElementById('peso1').value),
-                parseFloat(document.getElementById('peso2').value),
-                parseFloat(document.getElementById('peso3').value),
-                parseFloat(document.getElementById('peso4').value),
-                parseFloat(document.getElementById('peso5').value)
-            ];
-            const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
+            try {
+                const pesoValues = [];
+                for (let i = 1; i <= 5; i++) {
+                    const valor = parseFloat(document.getElementById(`peso${i}`).value);
+                    validarNumero(valor, `Peso Amostra ${i}`);
+                    pesoValues.push(valor);
+                }
 
-            // Validar
-            if (pesoValues.some(isNaN) || isNaN(pesoPadrao)) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
+                const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
+                validarNumero(pesoPadrao, 'Peso Padrão');
+
+                // Calcular estatísticas
+                const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
+                const mediaPeso = somaPeso / 5;
+                const diferenca = mediaPeso - pesoPadrao;
+                const margem = pesoPadrao * 0.01; // 1% de tolerância
+
+                // Verificar aprovação
+                const aprovado = Math.abs(diferenca) <= margem;
+                const precisaAjuste = Math.abs(diferenca) > margem;
+
+                // Calcular desvio padrão das amostras
+                const variancia = pesoValues.reduce((acc, curr) => acc + Math.pow(curr - mediaPeso, 2), 0) / 5;
+                const desvioPadrao = Math.sqrt(variancia);
+
+                // Exibir resultados
+                const resultadoDiv = document.getElementById('resultadoPeso');
+                const detailsDiv = document.getElementById('pesoDetails');
+                const statusDiv = document.getElementById('pesoStatus');
+
+                detailsDiv.innerHTML = `
+                    <div class="mb-3">
+                        <strong>Tolerância permitida:</strong> ±${formatarNumero(margem)} kg (1%)<br>
+                        <strong>Desvio padrão das amostras:</strong> ${formatarNumero(desvioPadrao)} kg
+                    </div>
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Amostra</th>
+                                <th>Peso (kg)</th>
+                                <th>Diferença do Padrão</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${pesoValues.map((peso, index) => {
+                    const diff = peso - pesoPadrao;
+                    const dentroMargem = Math.abs(diff) <= margem;
+                    return `
+                                    <tr class="${dentroMargem ? 'table-success' : 'table-warning'}">
+                                        <td>Peso ${index + 1}</td>
+                                        <td>${formatarNumero(peso)}</td>
+                                        <td>${diff >= 0 ? '+' : ''}${formatarNumero(diff)}</td>
+                                        <td>
+                                            ${dentroMargem ?
+                            '<i class="fas fa-check text-success"></i> OK' :
+                            '<i class="fas fa-exclamation-triangle text-warning"></i> Fora'
+                        }
+                                        </td>
+                                    </tr>
+                                `;
+                }).join('')}
+                            <tr class="table-active">
+                                <td><strong>Média das Amostras</strong></td>
+                                <td><strong>${formatarNumero(mediaPeso)}</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="table-active">
+                                <td><strong>Padrão Esperado</strong></td>
+                                <td><strong>${formatarNumero(pesoPadrao)}</strong></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="${diferenca > 0 ? 'table-warning' : diferenca < 0 ? 'table-info' : 'table-success'}">
+                                <td><strong>Diferença Total</strong></td>
+                                <td colspan="3">
+                                    <strong>${diferenca >= 0 ? '+' : ''}${formatarNumero(diferenca)} kg</strong>
+                                    ${aprovado ? ' (Dentro da tolerância)' : ' (Fora da tolerância)'}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+
+                if (aprovado) {
+                    statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO</span>';
+                    resultadoDiv.style.borderLeft = '4px solid #28a745';
+                } else {
+                    statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO</span>';
+                    resultadoDiv.style.borderLeft = '4px solid #dc3545';
+                }
+
+                // Adicionar recomendações específicas
+                if (precisaAjuste) {
+                    const recomendacao = diferenca > 0 ?
+                        'Reduzir o peso na máquina de envase' :
+                        'Aumentar o peso na máquina de envase';
+
+                    const urgencia = Math.abs(diferenca) > (margem * 2) ? 'URGENTE' : 'ATENÇÃO';
+
+                    const alertDiv = mostrarAlerta('warning', `${urgencia} - OPERADOR`,
+                        `Diferença de ${formatarNumero(Math.abs(diferenca))} kg detectada. ${recomendacao}.`);
+                    detailsDiv.appendChild(alertDiv);
+                }
+
+                resultadoDiv.classList.remove('d-none');
+                resultadoDiv.classList.add('fade-in');
+                resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
             }
-
-            // Calcular
-            const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
-            const mediaPeso = somaPeso / 5;
-            const diferenca = mediaPeso - pesoPadrao; // Diferença entre MÉDIA e Padrão
-            const margem = pesoPadrao * 0.01;
-
-            // Verificar aprovação
-            const aprovado = Math.abs(diferenca) <= margem;
-            const precisaAjuste = Math.abs(diferenca) > margem;
-
-            // Exibir resultados
-            const resultadoDiv = document.getElementById('resultadoPeso');
-            const detailsDiv = document.getElementById('pesoDetails');
-            const statusDiv = document.getElementById('pesoStatus');
-
-            const formatNumber = num => num.toFixed(2).replace('.', ',');
-
-            detailsDiv.innerHTML = `
-            <table class="result-table">
-                <thead>
-                    <tr>
-                        <th>Amostra</th>
-                        <th>Peso (kg)</th>
-                        <th>Diferença</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${pesoValues.map((peso, index) => `
-                        <tr>
-                            <td>Peso ${index + 1}</td>
-                            <td>${formatNumber(peso)}</td>
-                            <td>${formatNumber(peso - pesoPadrao)}</td>
-                        </tr>
-                    `).join('')}
-                    <tr class="table-active">
-                        <td><strong>Média</strong></td>
-                        <td><strong>${formatNumber(mediaPeso)}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr class="table-active">
-                        <td><strong>Padrão Esperado</strong></td>
-                        <td><strong>${formatNumber(pesoPadrao)}</strong></td>
-                        <td></td>
-                    </tr>
-                    <tr class="${diferenca > 0 ? 'table-warning' : 'table-info'}">
-                        <td><strong>Diferença (Média - Padrão)</strong></td>
-                        <td colspan="2"><strong>${formatNumber(diferenca)} kg</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        `;
-
-            if (aprovado) {
-                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO</span>';
-                resultadoDiv.style.borderLeftColor = 'var(--success-color)';
-            } else {
-                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO</span>';
-                resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
-            }
-
-            // Alerta para operador
-            if (precisaAjuste) {
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'alert alert-warning mt-3';
-                alertDiv.innerHTML = `
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <strong>ATENÇÃO OPERADOR:</strong> Diferença de ${formatNumber(diferenca)} kg.
-                ${diferenca > 0 ? 'Reduzir peso na máquina' : 'Aumentar peso na máquina'}.
-            `;
-                detailsDiv.appendChild(alertDiv);
-            }
-
-            resultadoDiv.classList.remove('d-none');
-            resultadoDiv.classList.add('fade-in');
-            resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
 
@@ -300,231 +369,182 @@ document.addEventListener('DOMContentLoaded', function () {
         validadeForm.addEventListener('submit', function (e) {
             e.preventDefault();
 
-            const linha = document.getElementById('linhaProduto').value;
-            const mes = parseInt(document.getElementById('mesValidade').value);
-            const ano = parseInt(document.getElementById('anoValidade').value);
-            const tempoValidade = parseInt(document.getElementById('tempoValidade').value);
-            const hora = document.getElementById('horaProducao').value;
+            try {
+                const linha = document.getElementById('linhaProduto').value;
+                const mes = parseInt(document.getElementById('mesValidade').value);
+                const ano = parseInt(document.getElementById('anoValidade').value);
+                const tempoValidade = parseInt(document.getElementById('tempoValidade').value);
+                const hora = document.getElementById('horaProducao').value;
 
-            // Validar
-            if (!linha || !mes || !ano || !hora) {
-                alert('Por favor, preencha todos os campos.');
-                return;
-            }
+                // Validações
+                if (!linha || !mes || !ano || !hora) {
+                    throw new Error('Todos os campos são obrigatórios.');
+                }
 
-            // Calcular datas
-            const hoje = new Date();
-            const diaAtual = hoje.getDate();
-            const dataProducao = new Date(ano, mes - 1, diaAtual);
-            const dataValidade = new Date(dataProducao);
-            dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
+                if (!mapeamentoLetras.linhas[linha]) {
+                    throw new Error('Linha de produção inválida.');
+                }
 
-            // Verificar validade
-            const aprovado = dataValidade > hoje;
+                if (!mapeamentoLetras.meses[mes]) {
+                    throw new Error('Mês inválido.');
+                }
 
-            // Gerar código
-            const letraLinha = mapeamentoLetras.linhas[linha];
-            const letraMes = mapeamentoLetras.meses[mes];
-            const letraAno = mapeamentoLetras.anos[ano];
-            const horaFormatada = hora.replace(':', '');
+                if (!mapeamentoLetras.anos[ano]) {
+                    throw new Error('Ano não suportado pelo sistema.');
+                }
 
-            const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaAtual.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
+                // Calcular datas
+                const hoje = new Date();
+                const diaAtual = hoje.getDate();
+                const dataProducao = new Date(ano, mes - 1, diaAtual);
+                const dataValidade = new Date(dataProducao);
+                dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
 
-            // Exibir resultados
-            const resultadoDiv = document.getElementById('resultadoValidade');
-            const detailsDiv = document.getElementById('validadeDetails');
-            const statusDiv = document.getElementById('validadeStatus');
-            const codigoDiv = document.getElementById('codigoValidade');
+                // Verificar se a data de produção não é futura
+                if (dataProducao > hoje) {
+                    throw new Error('A data de produção não pode ser futura.');
+                }
 
-            const formatDate = (date) => {
-                const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-                return `${mes}/${date.getFullYear()}`;
-            };
+                // Verificar validade
+                const aprovado = dataValidade > hoje;
+                const diasRestantes = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
 
-            detailsDiv.innerHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
-                        <p><strong>Validade:</strong> ${tempoValidade} meses</p>
-                        <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
+                // Gerar código de validade
+                const letraLinha = mapeamentoLetras.linhas[linha];
+                const letraMes = mapeamentoLetras.meses[mes];
+                const letraAno = mapeamentoLetras.anos[ano];
+                const horaFormatada = hora.replace(':', '');
+
+                const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaAtual.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
+
+                // Exibir resultados
+                const resultadoDiv = document.getElementById('resultadoValidade');
+                const detailsDiv = document.getElementById('validadeDetails');
+                const statusDiv = document.getElementById('validadeStatus');
+                const codigoDiv = document.getElementById('codigoValidade');
+
+                const formatDate = (date) => {
+                    return date.toLocaleDateString('pt-BR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                };
+
+                detailsDiv.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
+                            <p><strong>Validade:</strong> ${tempoValidade} meses</p>
+                            <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
+                            <p><strong>Horário de Produção:</strong> ${hora}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Linha:</strong> ${linha} → (${letraLinha})</p>
+                            <p><strong>Mês:</strong> ${mes} → (${letraMes})</p>
+                            <p><strong>Ano:</strong> ${ano} → (${letraAno})</p>
+                            <p><strong>Dias restantes:</strong> ${diasRestantes > 0 ? diasRestantes : 'VENCIDO'}</p>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <p><strong>Linha:</strong> ${linha} (${letraLinha})</p>
-                        <p><strong>Mês:</strong> ${mes} (${letraMes})</p>
-                        <p><strong>Ano:</strong> ${ano} (${letraAno})</p>
-                    </div>
-                </div>
-            `;
+                `;
 
-            if (aprovado) {
-                statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PRODUTO APROVADO</span>';
-                resultadoDiv.style.borderLeftColor = 'var(--success-color)';
-            } else {
-                statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO (CRQS/PQS)</span>';
-                resultadoDiv.style.borderLeftColor = 'var(--danger-color)';
+                if (aprovado) {
+                    const statusTexto = diasRestantes > 30 ?
+                        'PRODUTO APROVADO' :
+                        'PRODUTO APROVADO (Próximo ao vencimento)';
+
+                    statusDiv.innerHTML = `<span class="text-success"><i class="fas fa-check-circle me-2"></i>${statusTexto}</span>`;
+                    resultadoDiv.style.borderLeft = '4px solid #28a745';
+
+                    if (diasRestantes <= 30) {
+                        const alertaProximo = mostrarAlerta('warning', 'ATENÇÃO',
+                            `Produto vence em ${diasRestantes} dias. Considere priorizar a comercialização.`);
+                        detailsDiv.appendChild(alertaProximo);
+                    }
+                } else {
+                    statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO (CRQS/PQS)</span>';
+                    resultadoDiv.style.borderLeft = '4px solid #dc3545';
+
+                    const alertaVencido = mostrarAlerta('danger', 'PRODUTO VENCIDO',
+                        'Este produto não pode ser comercializado. Destinação conforme procedimento CRQS.');
+                    detailsDiv.appendChild(alertaVencido);
+                }
+
+                codigoDiv.innerHTML = `
+                    <h6 class="mb-2"><i class="fas fa-barcode me-2"></i>Código de Validade:</h6>
+                    <code class="fs-5">${codigoValidade}</code>
+                    <button class="btn btn-sm btn-outline-primary ms-3" onclick="navigator.clipboard.writeText('${codigoValidade}')">
+                        <i class="fas fa-copy me-1"></i>Copiar
+                    </button>
+                `;
+
+                resultadoDiv.classList.remove('d-none');
+                resultadoDiv.classList.add('fade-in');
+                resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            } catch (error) {
+                alert(`Erro: ${error.message}`);
             }
-
-            codigoDiv.textContent = codigoValidade;
-            resultadoDiv.classList.remove('d-none');
-            resultadoDiv.classList.add('fade-in');
-            resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
     }
 
     // ==================== FUNÇÕES LIMPAR ====================
-    document.getElementById('limparTara').addEventListener('click', function () {
-        for (let i = 1; i <= 10; i++) {
-            document.getElementById(`tara${i}`).value = '';
-        }
-        document.getElementById('5amostras').checked = true;
-        document.getElementById('10amostrasFields').classList.add('d-none');
-        document.getElementById('resultadoTara').classList.add('d-none');
-    });
-
-    document.getElementById('limparPeso').addEventListener('click', function () {
-        for (let i = 1; i <= 5; i++) {
-            document.getElementById(`peso${i}`).value = '';
-        }
-        document.getElementById('pesoPadrao').value = '';
-        document.getElementById('resultadoPeso').classList.add('d-none');
-    });
-
-    document.getElementById('limparValidade').addEventListener('click', function () {
-        document.getElementById('validadeForm').reset();
-        document.getElementById('resultadoValidade').classList.add('d-none');
-    });
-});
-document.addEventListener('DOMContentLoaded', function () {
-    // ==================== CALCULADORA DE TANQUE ====================
-    const calculadoraForm = document.getElementById('calculadoraForm');
-    if (calculadoraForm) {
-        calculadoraForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const massaTanque = parseFloat(document.getElementById('massaTanque').value);
-            const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
-            const tipoEmbalagem = document.getElementById('tipoEmbalagem').value;
-            const quantidadeEmbalagem = parseInt(document.getElementById('quantidadeEmbalagem').value);
-
-            if (isNaN(massaTanque) || isNaN(pesoPadrao) || isNaN(quantidadeEmbalagem) || pesoPadrao <= 0) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
+    document.getElementById('limparTara')?.addEventListener('click', function () {
+        if (confirm('Deseja limpar todos os campos de tara?')) {
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`tara${i}`).value = '';
             }
+            document.getElementById('5amostras').checked = true;
+            document.getElementById('10amostrasFields').classList.add('d-none');
+            document.getElementById('resultadoTara').classList.add('d-none');
+        }
+    });
 
-            // Cálculos
-            const totalUnidades = Math.floor(massaTanque / pesoPadrao);
-            const totalEmbalagens = Math.floor(totalUnidades / quantidadeEmbalagem);
-            const unidadesRestantes = totalUnidades % quantidadeEmbalagem;
-
-            // Nomes das embalagens
-            const nomesEmbalagem = {
-                'frasco': 'Frasco(s)',
-                'tampa': 'Tampa(s)',
-                'bandeja': 'Bandeja(s)',
-                'caixa': 'Caixa(s)',
-                'palete': 'Palete(s)'
-            };
-
-            const resultadoDiv = document.getElementById('resultadoCalculadora');
-            const detailsDiv = document.getElementById('calculadoraDetails');
-
-            const formatNumber = num => num.toFixed(0).replace('.', ',');
-
-            detailsDiv.innerHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Massa no Tanque:</strong> ${massaTanque.toFixed(3)} kg</p>
-                        <p><strong>Peso Padrão:</strong> ${pesoPadrao.toFixed(3)} kg</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Total de Unidades:</strong> ${formatNumber(totalUnidades)}</p>
-                        <p><strong>${nomesEmbalagem[tipoEmbalagem]}:</strong> ${formatNumber(totalEmbalagens)}</p>
-                        ${unidadesRestantes > 0 ? `<p><strong>Unidades Restantes:</strong> ${formatNumber(unidadesRestantes)}</p>` : ''}
-                    </div>
-                </div>
-                <div class="alert alert-success mt-3">
-                    <i class="fas fa-boxes me-2"></i>
-                    <strong>Produção:</strong> ${formatNumber(totalEmbalagens)} ${nomesEmbalagem[tipoEmbalagem]}
-                    + ${formatNumber(unidadesRestantes)} unidades avulsas
-                </div>
-            `;
-
-            resultadoDiv.classList.remove('d-none');
-            resultadoDiv.classList.add('fade-in');
-        });
-    }
-
-    // ==================== TROCA DE VARIANTE ====================
-    const varianteForm = document.getElementById('varianteForm');
-    if (varianteForm) {
-        varianteForm.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const varianteAtual = document.getElementById('varianteAtual').value;
-            const varianteNova = document.getElementById('varianteNova').value;
-            const massaDisponivel = parseFloat(document.getElementById('massaDisponivel').value);
-            const tempoTroca = parseInt(document.getElementById('tempoTroca').value);
-
-            if (!varianteAtual || !varianteNova || isNaN(massaDisponivel) || isNaN(tempoTroca)) {
-                alert('Por favor, preencha todos os campos corretamente.');
-                return;
+    document.getElementById('limparPeso')?.addEventListener('click', function () {
+        if (confirm('Deseja limpar todos os campos de peso?')) {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`peso${i}`).value = '';
             }
+            document.getElementById('pesoPadrao').value = '';
+            document.getElementById('resultadoPeso').classList.add('d-none');
+        }
+    });
 
-            // Pesos padrão por variante (kg)
-            const pesosVariantes = {
-                '300ml': 0.175,
-                '500ml': 0.285,
-                '750ml': 0.425,
-                '1L': 0.560
-            };
+    document.getElementById('limparValidade')?.addEventListener('click', function () {
+        if (confirm('Deseja limpar todos os campos de validade?')) {
+            document.getElementById('validadeForm').reset();
+            document.getElementById('resultadoValidade').classList.add('d-none');
+        }
+    });
 
-            const pesoAtual = pesosVariantes[varianteAtual];
-            const pesoNovo = pesosVariantes[varianteNova];
+    // ==================== ANIMAÇÕES E UX ====================
+    // Adicionar animação de fade-in
+    const style = document.createElement('style');
+    style.textContent = `
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    `;
+    document.head.appendChild(style);
 
-            const unidadesNovas = Math.floor(massaDisponivel / pesoNovo);
-            const diferencaPeso = pesoNovo - pesoAtual;
-
-            const resultadoDiv = document.getElementById('resultadoVariante');
-            const detailsDiv = document.getElementById('varianteDetails');
-            const tempoDiv = document.getElementById('varianteTempo');
-
-            detailsDiv.innerHTML = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><strong>Variante Atual:</strong> ${varianteAtual}</p>
-                        <p><strong>Peso Unitário:</strong> ${pesoAtual.toFixed(3)} kg</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><strong>Nova Variante:</strong> ${varianteNova}</p>
-                        <p><strong>Peso Unitário:</strong> ${pesoNovo.toFixed(3)} kg</p>
-                    </div>
-                </div>
-                <div class="alert ${diferencaPeso > 0 ? 'alert-warning' : 'alert-info'} mt-3">
-                    <i class="fas ${diferencaPeso > 0 ? 'fa-arrow-up' : 'fa-arrow-down'} me-2"></i>
-                    <strong>Diferença de Peso:</strong> ${Math.abs(diferencaPeso).toFixed(3)} kg
-                    (${diferencaPeso > 0 ? 'aumento' : 'redução'})
-                </div>
-            `;
-
-            tempoDiv.innerHTML = `
-                <i class="fas fa-clock me-2"></i>
-                <strong>Tempo de Troca:</strong> ${tempoTroca} minutos |
-                <strong>Produção Nova:</strong> ${unidadesNovas} unidades
-            `;
-
-            resultadoDiv.classList.remove('d-none');
-            resultadoDiv.classList.add('fade-in');
+    // Adicionar feedback visual nos formulários
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function () {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.classList.add('loading');
+                setTimeout(() => submitBtn.classList.remove('loading'), 1000);
+            }
         });
-    }
-
-    // ==================== FUNÇÕES LIMPAR ====================
-    document.getElementById('limparCalculadora')?.addEventListener('click', function () {
-        document.getElementById('calculadoraForm').reset();
-        document.getElementById('resultadoCalculadora').classList.add('d-none');
     });
 
-    document.getElementById('limparVariante')?.addEventListener('click', function () {
-        document.getElementById('varianteForm').reset();
-        document.getElementById('resultadoVariante').classList.add('d-none');
-    });
+    console.log('Sistema Inspetor de Qualidade Unilever carregado com sucesso!');
 });
