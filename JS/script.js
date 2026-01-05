@@ -120,6 +120,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return alertaDiv;
     }
 
+    // Função auxiliar para obter o número de dias em um mês
+    function getDiasNoMes(ano, mes) {
+        // mes em JavaScript é 0-indexed (0 = Janeiro, 11 = Dezembro)
+        // Criamos uma data no dia 0 do próximo mês, que retorna o último dia do mês atual
+        return new Date(ano, mes, 0).getDate();
+    }
+
     // ==================== TARA ====================
     // Controle de exibição dos campos
     document.querySelectorAll('input[name="qtdAmostras"]').forEach(radio => {
@@ -393,12 +400,41 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Ano não suportado pelo sistema.');
                 }
 
-                // Calcular datas
+                // ============ CÁLCULO MELHORADO DE DATAS ============
                 const hoje = new Date();
                 const diaAtual = hoje.getDate();
-                const dataProducao = new Date(ano, mes - 1, diaAtual);
+
+                // Verifica quantos dias tem o mês selecionado
+                const diasNoMesSelecionado = getDiasNoMes(ano, mes);
+
+                // Ajusta o dia se necessário (exemplo: se hoje é dia 31 mas o mês tem 30 dias)
+                const diaProducao = Math.min(diaAtual, diasNoMesSelecionado);
+
+                // Data de produção: usa o mês/ano selecionado com o dia ajustado
+                const dataProducao = new Date(ano, mes - 1, diaProducao);
+
+                // Calcular data de validade adicionando os meses
+                // JavaScript automaticamente ajusta para o último dia do mês se necessário
                 const dataValidade = new Date(dataProducao);
                 dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
+
+                // Informação adicional sobre ajuste de dias
+                let infoAjusteDias = '';
+                if (diaProducao !== diaAtual) {
+                    infoAjusteDias = `<div class="alert alert-info mt-2">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Atenção:</strong> O dia foi ajustado de ${diaAtual} para ${diaProducao}
+                        porque ${mes}/${ano} tem apenas ${diasNoMesSelecionado} dias.
+                    </div>`;
+                }
+
+                // Informação sobre o mês de validade
+                const diasNoMesValidade = getDiasNoMes(dataValidade.getFullYear(), dataValidade.getMonth() + 1);
+                const infoMesValidade = `<div class="alert alert-light mt-2">
+                    <i class="fas fa-calendar me-2"></i>
+                    <strong>Informação:</strong> O mês de produção (${mes}/${ano}) tem ${diasNoMesSelecionado} dias.<br>
+                    <strong>Informação:</strong> O mês de validade (${dataValidade.getMonth() + 1}/${dataValidade.getFullYear()}) tem ${diasNoMesValidade} dias.
+                </div>`;
 
                 // Verificar se a data de produção não é futura
                 if (dataProducao > hoje) {
@@ -415,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const letraAno = mapeamentoLetras.anos[ano];
                 const horaFormatada = hora.replace(':', '');
 
-                const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaAtual.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
+                const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaProducao.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
 
                 // Exibir resultados
                 const resultadoDiv = document.getElementById('resultadoValidade');
@@ -432,8 +468,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
 
                 detailsDiv.innerHTML = `
+                    ${infoAjusteDias}
+                    ${infoMesValidade}
                     <div class="row">
                         <div class="col-md-6">
+                            <p><strong>Data de Hoje:</strong> ${formatDate(hoje)}</p>
                             <p><strong>Data de Produção:</strong> ${formatDate(dataProducao)}</p>
                             <p><strong>Validade:</strong> ${tempoValidade} meses</p>
                             <p><strong>Data de Validade:</strong> ${formatDate(dataValidade)}</p>
@@ -443,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p><strong>Linha:</strong> ${linha} → (${letraLinha})</p>
                             <p><strong>Mês:</strong> ${mes} → (${letraMes})</p>
                             <p><strong>Ano:</strong> ${ano} → (${letraAno})</p>
+                            <p><strong>Dia:</strong> ${diaProducao}</p>
                             <p><strong>Dias restantes:</strong> ${diasRestantes > 0 ? diasRestantes : 'VENCIDO'}</p>
                         </div>
                     </div>
