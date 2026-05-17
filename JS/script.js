@@ -4,21 +4,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Mapeamento de letras para validade
     const mapeamentoLetras = {
-        // Linhas de Produção
         linhas: {
             'S01': 'A', 'S03': 'B', 'S05': 'C', 'S08': 'D', 'S10': 'E',
             'S11': 'F', 'S12': 'G', 'S14': 'H', 'D11': 'K', 'D12': 'L',
             'A01': 'M', 'A02': 'T', 'A03': 'O', 'A04': 'P', 'A07': 'S',
             'A06': 'X', 'A08': 'Z'
         },
-
-        // Meses
         meses: {
             1: 'A', 2: 'B', 3: 'C', 4: 'D', 5: 'E', 6: 'F',
             7: 'G', 8: 'H', 9: 'I', 10: 'J', 11: 'K', 12: 'L'
         },
-
-        // Anos
         anos: {
             2021: 'E', 2022: 'F', 2023: 'G', 2024: 'H', 2025: 'I',
             2026: 'J', 2027: 'K', 2028: 'L', 2029: 'M', 2030: 'N',
@@ -26,30 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // ==================== CONTROLE DE TEMA ====================
-    const themeToggle = document.getElementById('themeToggle');
-    const themeLabel = document.querySelector('.theme-label');
-    const html = document.documentElement;
-
-    function applyTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-        themeLabel.textContent = theme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
-    }
-
-    // Verificar preferência de tema
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const savedTheme = localStorage.getItem('theme');
-    applyTheme(savedTheme || (prefersDark ? 'dark' : 'light'));
-
-    themeToggle.addEventListener('click', () => {
-        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        applyTheme(newTheme);
-    });
-
     // ==================== NAVEGAÇÃO ====================
     function setupNavigation() {
-        // Atualiza menu ativo conforme scroll
         function updateActiveMenu() {
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('.nav-link');
@@ -73,7 +46,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Scroll suave
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -81,12 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (target) {
                     const navbarHeight = document.querySelector('.navbar').offsetHeight;
                     const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
                     if (history.pushState) {
                         history.pushState(null, null, this.getAttribute('href'));
                     }
@@ -99,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     setupNavigation();
 
-    // ==================== FUNÇÕES DE VALIDAÇÃO ====================
+    // ==================== FUNÇÕES AUXILIARES ====================
     function validarNumero(valor, nome) {
         if (isNaN(valor) || valor < 0) {
             throw new Error(`${nome} deve ser um número válido e não negativo.`);
@@ -120,15 +87,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return alertaDiv;
     }
 
-    // Função auxiliar para obter o número de dias em um mês
     function getDiasNoMes(ano, mes) {
-        // mes em JavaScript é 0-indexed (0 = Janeiro, 11 = Dezembro)
-        // Criamos uma data no dia 0 do próximo mês, que retorna o último dia do mês atual
         return new Date(ano, mes, 0).getDate();
     }
 
     // ==================== TARA ====================
-    // Controle de exibição dos campos
     document.querySelectorAll('input[name="qtdAmostras"]').forEach(radio => {
         radio.addEventListener('change', function () {
             const show10Amostras = this.id === '10amostras';
@@ -142,43 +105,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Formulário de Tara
     const taraForm = document.getElementById('taraForm');
     if (taraForm) {
         taraForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
             try {
                 const use10Amostras = document.getElementById('10amostras').checked;
                 const numAmostras = use10Amostras ? 10 : 5;
                 const taraValues = [];
 
-                // Coletar valores
                 for (let i = 1; i <= numAmostras; i++) {
                     const valor = parseFloat(document.getElementById(`tara${i}`).value);
                     validarNumero(valor, `Tara Amostra ${i}`);
                     taraValues.push(valor);
                 }
 
-                // Verificar se há pelo menos uma amostra
-                if (taraValues.length === 0) {
-                    throw new Error('É necessário inserir pelo menos uma amostra.');
-                }
-
-                // Calcular média
                 const somaTara = taraValues.reduce((a, b) => a + b, 0);
                 const mediaTara = somaTara / numAmostras;
-
-                // Encontrar melhor tara (mais próxima da média)
                 const melhorTara = taraValues.reduce((prev, curr) =>
                     Math.abs(curr - mediaTara) < Math.abs(prev - mediaTara) ? curr : prev
                 );
-
-                // Calcular desvio padrão
                 const variancia = taraValues.reduce((acc, curr) => acc + Math.pow(curr - mediaTara, 2), 0) / numAmostras;
                 const desvioPadrao = Math.sqrt(variancia);
 
-                // Exibir resultados
                 const resultadoDiv = document.getElementById('resultadoTara');
                 const detailsDiv = document.getElementById('taraDetails');
                 const recomendacaoDiv = document.getElementById('taraRecomendacao');
@@ -202,25 +151,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     const diferenca = tara - mediaTara;
                     const isRecomendada = tara === melhorTara;
                     return `
-                                    <tr ${isRecomendada ? 'class="table-success"' : ''}>
-                                        <td>Tara ${index + 1}</td>
-                                        <td>${formatarNumero(tara)}</td>
-                                        <td>${diferenca >= 0 ? '+' : ''}${formatarNumero(diferenca)}</td>
-                                        <td>${isRecomendada ? '<i class="fas fa-star text-warning"></i> Recomendada' : ''}</td>
-                                    </tr>
-                                `;
+                                <tr ${isRecomendada ? 'class="table-success"' : ''}>
+                                    <td>Tara ${index + 1}</td>
+                                    <td>${formatarNumero(tara)}</td>
+                                    <td>${diferenca >= 0 ? '+' : ''}${formatarNumero(diferenca)}</td>
+                                    <td>${isRecomendada ? '<i class="fas fa-star text-warning"></i> Recomendada' : ''}</td>
+                                </tr>
+                            `;
                 }).join('')}
                             <tr class="table-active">
                                 <td><strong>Total</strong></td>
                                 <td><strong>${formatarNumero(somaTara)}</strong></td>
-                                <td></td>
-                                <td></td>
+                                <td></td><td></td>
                             </tr>
                             <tr class="table-active">
                                 <td><strong>Média</strong></td>
                                 <td><strong>${formatarNumero(mediaTara)}</strong></td>
-                                <td></td>
-                                <td></td>
+                                <td></td><td></td>
                             </tr>
                         </tbody>
                     </table>
@@ -253,7 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (pesoForm) {
         pesoForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
             try {
                 const pesoValues = [];
                 for (let i = 1; i <= 5; i++) {
@@ -265,21 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pesoPadrao = parseFloat(document.getElementById('pesoPadrao').value);
                 validarNumero(pesoPadrao, 'Peso Padrão');
 
-                // Calcular estatísticas
                 const somaPeso = pesoValues.reduce((a, b) => a + b, 0);
                 const mediaPeso = somaPeso / 5;
                 const diferenca = mediaPeso - pesoPadrao;
-                const margem = pesoPadrao * 0.01; // 1% de tolerância
-
-                // Verificar aprovação
+                const margem = pesoPadrao * 0.01;
                 const aprovado = Math.abs(diferenca) <= margem;
-                const precisaAjuste = Math.abs(diferenca) > margem;
-
-                // Calcular desvio padrão das amostras
                 const variancia = pesoValues.reduce((acc, curr) => acc + Math.pow(curr - mediaPeso, 2), 0) / 5;
                 const desvioPadrao = Math.sqrt(variancia);
 
-                // Exibir resultados
                 const resultadoDiv = document.getElementById('resultadoPeso');
                 const detailsDiv = document.getElementById('pesoDetails');
                 const statusDiv = document.getElementById('pesoStatus');
@@ -303,30 +242,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     const diff = peso - pesoPadrao;
                     const dentroMargem = Math.abs(diff) <= margem;
                     return `
-                                    <tr class="${dentroMargem ? 'table-success' : 'table-warning'}">
-                                        <td>Peso ${index + 1}</td>
-                                        <td>${formatarNumero(peso)}</td>
-                                        <td>${diff >= 0 ? '+' : ''}${formatarNumero(diff)}</td>
-                                        <td>
-                                            ${dentroMargem ?
-                            '<i class="fas fa-check text-success"></i> OK' :
-                            '<i class="fas fa-exclamation-triangle text-warning"></i> Fora'
-                        }
-                                        </td>
-                                    </tr>
-                                `;
+                                <tr class="${dentroMargem ? 'table-success' : 'table-warning'}">
+                                    <td>Peso ${index + 1}</td>
+                                    <td>${formatarNumero(peso)}</td>
+                                    <td>${diff >= 0 ? '+' : ''}${formatarNumero(diff)}</td>
+                                    <td>${dentroMargem
+                            ? '<i class="fas fa-check text-success"></i> OK'
+                            : '<i class="fas fa-exclamation-triangle text-warning"></i> Fora'}</td>
+                                </tr>
+                            `;
                 }).join('')}
                             <tr class="table-active">
                                 <td><strong>Média das Amostras</strong></td>
                                 <td><strong>${formatarNumero(mediaPeso)}</strong></td>
-                                <td></td>
-                                <td></td>
+                                <td></td><td></td>
                             </tr>
                             <tr class="table-active">
                                 <td><strong>Padrão Esperado</strong></td>
                                 <td><strong>${formatarNumero(pesoPadrao)}</strong></td>
-                                <td></td>
-                                <td></td>
+                                <td></td><td></td>
                             </tr>
                             <tr class="${diferenca > 0 ? 'table-warning' : diferenca < 0 ? 'table-info' : 'table-success'}">
                                 <td><strong>Diferença Total</strong></td>
@@ -341,20 +275,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (aprovado) {
                     statusDiv.innerHTML = '<span class="text-success"><i class="fas fa-check-circle me-2"></i>PESO APROVADO</span>';
-                    resultadoDiv.style.borderLeft = '4px solid #28a745';
+                    resultadoDiv.style.borderLeft = '4px solid var(--success, #16a34a)';
                 } else {
                     statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PESO REPROVADO</span>';
-                    resultadoDiv.style.borderLeft = '4px solid #dc3545';
-                }
+                    resultadoDiv.style.borderLeft = '4px solid var(--danger, #dc2626)';
 
-                // Adicionar recomendações específicas
-                if (precisaAjuste) {
-                    const recomendacao = diferenca > 0 ?
-                        'Reduzir o peso na máquina de envase' :
-                        'Aumentar o peso na máquina de envase';
-
+                    const recomendacao = diferenca > 0 ? 'Reduzir o peso na máquina de envase' : 'Aumentar o peso na máquina de envase';
                     const urgencia = Math.abs(diferenca) > (margem * 2) ? 'URGENTE' : 'ATENÇÃO';
-
                     const alertDiv = mostrarAlerta('warning', `${urgencia} - OPERADOR`,
                         `Diferença de ${formatarNumero(Math.abs(diferenca))} kg detectada. ${recomendacao}.`);
                     detailsDiv.appendChild(alertDiv);
@@ -375,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (validadeForm) {
         validadeForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
             try {
                 const linha = document.getElementById('linhaProduto').value;
                 const mes = parseInt(document.getElementById('mesValidade').value);
@@ -383,42 +309,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 const tempoValidade = parseInt(document.getElementById('tempoValidade').value);
                 const hora = document.getElementById('horaProducao').value;
 
-                // Validações
-                if (!linha || !mes || !ano || !hora) {
-                    throw new Error('Todos os campos são obrigatórios.');
-                }
+                if (!linha || !mes || !ano || !hora) throw new Error('Todos os campos são obrigatórios.');
+                if (!mapeamentoLetras.linhas[linha]) throw new Error('Linha de produção inválida.');
+                if (!mapeamentoLetras.meses[mes]) throw new Error('Mês inválido.');
+                if (!mapeamentoLetras.anos[ano]) throw new Error('Ano não suportado pelo sistema.');
 
-                if (!mapeamentoLetras.linhas[linha]) {
-                    throw new Error('Linha de produção inválida.');
-                }
-
-                if (!mapeamentoLetras.meses[mes]) {
-                    throw new Error('Mês inválido.');
-                }
-
-                if (!mapeamentoLetras.anos[ano]) {
-                    throw new Error('Ano não suportado pelo sistema.');
-                }
-
-                // ============ CÁLCULO MELHORADO DE DATAS ============
                 const hoje = new Date();
                 const diaAtual = hoje.getDate();
-
-                // Verifica quantos dias tem o mês selecionado
                 const diasNoMesSelecionado = getDiasNoMes(ano, mes);
-
-                // Ajusta o dia se necessário (exemplo: se hoje é dia 31 mas o mês tem 30 dias)
                 const diaProducao = Math.min(diaAtual, diasNoMesSelecionado);
-
-                // Data de produção: usa o mês/ano selecionado com o dia ajustado
                 const dataProducao = new Date(ano, mes - 1, diaProducao);
-
-                // Calcular data de validade adicionando os meses
-                // JavaScript automaticamente ajusta para o último dia do mês se necessário
                 const dataValidade = new Date(dataProducao);
                 dataValidade.setMonth(dataValidade.getMonth() + tempoValidade);
 
-                // Informação adicional sobre ajuste de dias
                 let infoAjusteDias = '';
                 if (diaProducao !== diaAtual) {
                     infoAjusteDias = `<div class="alert alert-info mt-2">
@@ -428,7 +331,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>`;
                 }
 
-                // Informação sobre o mês de validade
                 const diasNoMesValidade = getDiasNoMes(dataValidade.getFullYear(), dataValidade.getMonth() + 1);
                 const infoMesValidade = `<div class="alert alert-light mt-2">
                     <i class="fas fa-calendar me-2"></i>
@@ -436,36 +338,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     <strong>Informação:</strong> O mês de validade (${dataValidade.getMonth() + 1}/${dataValidade.getFullYear()}) tem ${diasNoMesValidade} dias.
                 </div>`;
 
-                // Verificar se a data de produção não é futura
-                if (dataProducao > hoje) {
-                    throw new Error('A data de produção não pode ser futura.');
-                }
+                if (dataProducao > hoje) throw new Error('A data de produção não pode ser futura.');
 
-                // Verificar validade
                 const aprovado = dataValidade > hoje;
                 const diasRestantes = Math.ceil((dataValidade - hoje) / (1000 * 60 * 60 * 24));
 
-                // Gerar código de validade
                 const letraLinha = mapeamentoLetras.linhas[linha];
                 const letraMes = mapeamentoLetras.meses[mes];
                 const letraAno = mapeamentoLetras.anos[ano];
                 const horaFormatada = hora.replace(':', '');
-
                 const codigoValidade = `V:${(dataValidade.getMonth() + 1).toString().padStart(2, '0')}/${dataValidade.getFullYear()} L:V${letraLinha}${letraMes}${diaProducao.toString().padStart(2, '0')}${horaFormatada}${letraAno}`;
 
-                // Exibir resultados
                 const resultadoDiv = document.getElementById('resultadoValidade');
                 const detailsDiv = document.getElementById('validadeDetails');
                 const statusDiv = document.getElementById('validadeStatus');
                 const codigoDiv = document.getElementById('codigoValidade');
 
-                const formatDate = (date) => {
-                    return date.toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric'
-                    });
-                };
+                const formatDate = (date) => date.toLocaleDateString('pt-BR', {
+                    day: '2-digit', month: '2-digit', year: 'numeric'
+                });
 
                 detailsDiv.innerHTML = `
                     ${infoAjusteDias}
@@ -489,25 +380,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 `;
 
                 if (aprovado) {
-                    const statusTexto = diasRestantes > 30 ?
-                        'PRODUTO APROVADO' :
-                        'PRODUTO APROVADO (Próximo ao vencimento)';
-
+                    const statusTexto = diasRestantes > 30 ? 'PRODUTO APROVADO' : 'PRODUTO APROVADO (Próximo ao vencimento)';
                     statusDiv.innerHTML = `<span class="text-success"><i class="fas fa-check-circle me-2"></i>${statusTexto}</span>`;
-                    resultadoDiv.style.borderLeft = '4px solid #28a745';
+                    resultadoDiv.style.borderLeft = '4px solid var(--success, #16a34a)';
 
                     if (diasRestantes <= 30) {
-                        const alertaProximo = mostrarAlerta('warning', 'ATENÇÃO',
-                            `Produto vence em ${diasRestantes} dias. Considere priorizar a comercialização.`);
-                        detailsDiv.appendChild(alertaProximo);
+                        detailsDiv.appendChild(mostrarAlerta('warning', 'ATENÇÃO',
+                            `Produto vence em ${diasRestantes} dias. Considere priorizar a comercialização.`));
                     }
                 } else {
                     statusDiv.innerHTML = '<span class="text-danger"><i class="fas fa-times-circle me-2"></i>PRODUTO REPROVADO (CRQS/PQS)</span>';
-                    resultadoDiv.style.borderLeft = '4px solid #dc3545';
-
-                    const alertaVencido = mostrarAlerta('danger', 'PRODUTO VENCIDO',
-                        'Este produto não pode ser comercializado. Destinação conforme procedimento CRQS.');
-                    detailsDiv.appendChild(alertaVencido);
+                    resultadoDiv.style.borderLeft = '4px solid var(--danger, #dc2626)';
+                    detailsDiv.appendChild(mostrarAlerta('danger', 'PRODUTO VENCIDO',
+                        'Este produto não pode ser comercializado. Destinação conforme procedimento CRQS.'));
                 }
 
                 codigoDiv.innerHTML = `
@@ -528,12 +413,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ==================== FUNÇÕES LIMPAR ====================
+    // ==================== LIMPAR ====================
     document.getElementById('limparTara')?.addEventListener('click', function () {
         if (confirm('Deseja limpar todos os campos de tara?')) {
-            for (let i = 1; i <= 10; i++) {
-                document.getElementById(`tara${i}`).value = '';
-            }
+            for (let i = 1; i <= 10; i++) document.getElementById(`tara${i}`).value = '';
             document.getElementById('5amostras').checked = true;
             document.getElementById('10amostrasFields').classList.add('d-none');
             document.getElementById('resultadoTara').classList.add('d-none');
@@ -542,9 +425,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('limparPeso')?.addEventListener('click', function () {
         if (confirm('Deseja limpar todos os campos de peso?')) {
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`peso${i}`).value = '';
-            }
+            for (let i = 1; i <= 5; i++) document.getElementById(`peso${i}`).value = '';
             document.getElementById('pesoPadrao').value = '';
             document.getElementById('resultadoPeso').classList.add('d-none');
         }
@@ -557,25 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // ==================== ANIMAÇÕES E UX ====================
-    // Adicionar animação de fade-in
-    const style = document.createElement('style');
-    style.textContent = `
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Adicionar feedback visual nos formulários
+    // ==================== FEEDBACK VISUAL ====================
     document.querySelectorAll('form').forEach(form => {
         form.addEventListener('submit', function () {
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -586,5 +449,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    console.log('Sistema Inspetor de Qualidade Unilever carregado com sucesso!');
+    console.log('SmartQuality 4.0 carregado com sucesso!');
 });
