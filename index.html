@@ -85,13 +85,6 @@
       <section id="inicio" class="pt-5 mt-4">
         <div class="container my-5">
           <div class="row justify-content-center">
-            <!--
-              IMAGEM HERO CORRIGIDA
-              ─────────────────────
-              Coloque UMA das suas imagens abaixo em src="".
-              Troque pelo nome exato do arquivo que está na pasta Img/.
-              Exemplo: src="./Img/Logo futurista SmartQuality 4.0.png"
-            -->
             <div class="col-12 text-center mb-4 hero-img-wrap">
               <img
                 src="./Img/Logo futurista SmartQuality 4.0.png"
@@ -124,12 +117,51 @@
         </div>
       </section>
 
-      <!-- ── Tara ── -->
+      <!-- ── TARA ── -->
       <section id="tara-section" class="my-5 py-5">
         <div class="container">
-          <h2 class="text-center mb-5">
+          <h2 class="text-center mb-3">
             <i class="fas fa-balance-scale me-2"></i>Verificação de Tara
           </h2>
+
+          <div class="text-center mb-4">
+            <button
+              class="btn btn-info btn-sm"
+              data-bs-toggle="collapse"
+              data-bs-target="#explicacaoTara"
+            >
+              <i class="fas fa-question-circle me-2"></i> Como fazer a
+              Verificação de Tara?
+            </button>
+          </div>
+
+          <div class="collapse mb-4" id="explicacaoTara">
+            <div class="card border-info">
+              <div class="card-body bg-light">
+                <p><strong>Como fazer na prática (bem explicado):</strong></p>
+                <ul>
+                  <li>
+                    O inspetor ou operador pega
+                    <strong>5 ou 10 embalagens vazias</strong> (sem produto).
+                  </li>
+                  <li>Pesa cada embalagem na balança.</li>
+                  <li>Digita os valores aqui no sistema.</li>
+                  <li>
+                    O sistema calcula a média e mostra qual é a
+                    <strong>melhor tara</strong> (a mais próxima da média).
+                  </li>
+                  <li>
+                    Use essa tara recomendada para ajustar a máquina de envase.
+                  </li>
+                </ul>
+                <small class="text-muted"
+                  >Quanto menor o desvio padrão, melhor está a qualidade das
+                  embalagens.</small
+                >
+              </div>
+            </div>
+          </div>
+
           <div class="row justify-content-center">
             <div class="col-lg-8">
               <div class="card shadow">
@@ -173,8 +205,7 @@
                         <div class="col-md-6">
                           <label for="tara1" class="form-label"
                             >Tara Amostra 01 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -187,8 +218,7 @@
                         <div class="col-md-6">
                           <label for="tara2" class="form-label"
                             >Tara Amostra 02 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -201,8 +231,7 @@
                         <div class="col-md-6">
                           <label for="tara3" class="form-label"
                             >Tara Amostra 03 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -215,8 +244,7 @@
                         <div class="col-md-6">
                           <label for="tara4" class="form-label"
                             >Tara Amostra 04 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -229,8 +257,7 @@
                         <div class="col-md-6">
                           <label for="tara5" class="form-label"
                             >Tara Amostra 05 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -246,8 +273,7 @@
                         <div class="col-md-6">
                           <label for="tara6" class="form-label"
                             >Tara Amostra 06 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -259,8 +285,7 @@
                         <div class="col-md-6">
                           <label for="tara7" class="form-label"
                             >Tara Amostra 07 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -272,8 +297,7 @@
                         <div class="col-md-6">
                           <label for="tara8" class="form-label"
                             >Tara Amostra 08 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -285,8 +309,7 @@
                         <div class="col-md-6">
                           <label for="tara9" class="form-label"
                             >Tara Amostra 09 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -298,8 +321,7 @@
                         <div class="col-md-6">
                           <label for="tara10" class="form-label"
                             >Tara Amostra 10 (kg)</label
-                          >
-                          <input
+                          ><input
                             type="number"
                             step="0.01"
                             min="0"
@@ -345,12 +367,45 @@
         </div>
       </section>
 
-      <!-- ── Peso ── -->
+      <!-- ── PESO ── -->
       <section id="peso-section" class="my-5 py-5 bg-light rounded-3">
         <div class="container">
-          <h2 class="text-center mb-5">
+          <h2 class="text-center mb-3">
             <i class="fas fa-weight me-2"></i>Verificação de Peso
           </h2>
+
+          <div class="text-center mb-4">
+            <button
+              class="btn btn-info btn-sm"
+              data-bs-toggle="collapse"
+              data-bs-target="#explicacaoPeso"
+            >
+              <i class="fas fa-question-circle me-2"></i> Como fazer a
+              Verificação de Peso?
+            </button>
+          </div>
+
+          <div class="collapse mb-4" id="explicacaoPeso">
+            <div class="card border-info">
+              <div class="card-body bg-light">
+                <p><strong>Como fazer na prática:</strong></p>
+                <ul>
+                  <li>Olhe o peso padrão no checklist do SAP.</li>
+                  <li>
+                    Pegue <strong>5 amostras cheias</strong> da linha de
+                    produção.
+                  </li>
+                  <li>Pese cada uma e digite aqui.</li>
+                  <li>
+                    Se o peso estiver baixo → avise o operador para aumentar o
+                    enchimento.
+                  </li>
+                  <li>Se estiver bom → pode registrar no CEP Online.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div class="row justify-content-center">
             <div class="col-lg-8">
               <div class="card shadow">
@@ -365,8 +420,7 @@
                       <div class="col-md-6">
                         <label for="peso1" class="form-label"
                           >Peso Amostra 01 (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -379,8 +433,7 @@
                       <div class="col-md-6">
                         <label for="peso2" class="form-label"
                           >Peso Amostra 02 (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -393,8 +446,7 @@
                       <div class="col-md-6">
                         <label for="peso3" class="form-label"
                           >Peso Amostra 03 (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -407,8 +459,7 @@
                       <div class="col-md-6">
                         <label for="peso4" class="form-label"
                           >Peso Amostra 04 (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -421,8 +472,7 @@
                       <div class="col-md-6">
                         <label for="peso5" class="form-label"
                           >Peso Amostra 05 (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -435,8 +485,7 @@
                       <div class="col-md-6">
                         <label for="pesoPadrao" class="form-label"
                           >Peso Padrão Esperado (kg)</label
-                        >
-                        <input
+                        ><input
                           type="number"
                           step="0.01"
                           min="0"
@@ -479,17 +528,50 @@
         </div>
       </section>
 
-      <!-- ── Validade ── -->
+      <!-- ── VALIDADE ── -->
       <section id="validade-section" class="my-5 py-5">
         <div class="container">
-          <h2 class="text-center mb-5">
+          <h2 class="text-center mb-3">
             <i class="fas fa-calendar-check me-2"></i>Verificação de Validade
           </h2>
+
+          <div class="text-center mb-4">
+            <button
+              class="btn btn-info btn-sm"
+              data-bs-toggle="collapse"
+              data-bs-target="#explicacaoValidade"
+            >
+              <i class="fas fa-question-circle me-2"></i> Como fazer a
+              Verificação de Validade?
+            </button>
+          </div>
+
+          <div class="collapse mb-4" id="explicacaoValidade">
+            <div class="card border-info">
+              <div class="card-body bg-light">
+                <p><strong>Como fazer na prática:</strong></p>
+                <ul>
+                  <li>
+                    Olhe no <strong>rótulo, contra-rótulo ou sleeve</strong> do
+                    produto.
+                  </li>
+                  <li>Identifique a Linha, Mês, Ano e Horário de produção.</li>
+                  <li>Preencha os campos abaixo.</li>
+                  <li>O sistema calcula a data de validade e gera o código.</li>
+                  <li>
+                    Se estiver vencido, separe o produto conforme CRQS/PQS.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           <div class="row justify-content-center">
             <div class="col-lg-8">
               <div class="card shadow">
                 <div class="card-body">
                   <form id="validadeForm">
+                    <!-- Formulário de validade mantido igual -->
                     <div class="row g-3">
                       <div class="col-md-6">
                         <label for="linhaProduto" class="form-label"
