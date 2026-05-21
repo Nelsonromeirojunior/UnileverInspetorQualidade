@@ -1,7 +1,10 @@
 /* ============================================
-   SmartQuality 4.0 — CSS Moderno
-   Tema único, sem alternância claro/escuro
+   SmartQuality 4.0 — CSS Moderno (Corrigido)
+   Sem modo claro/escuro. Tema único.
    ============================================ */
+
+/* @import DEVE vir antes de tudo */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
 
 /* ── Variáveis Globais ── */
 :root {
@@ -10,7 +13,6 @@
   --brand-blue-mid: #1a19c4;
   --brand-blue-soft: #2826e0;
   --accent-cyan: #00d4ff;
-  --accent-glow: rgba(0, 212, 255, 0.18);
 
   /* Backgrounds */
   --bg-page: #f0f4ff;
@@ -22,7 +24,6 @@
   --text-primary: #0d0c2b;
   --text-secondary: #4a4870;
   --text-muted: #8888aa;
-  --text-white: #ffffff;
 
   /* Bordas & sombras */
   --border: #c8d0f0;
@@ -46,7 +47,7 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Espaçamento */
+  /* Raios */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -76,9 +77,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Importar fontes modernas via Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
-
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   inline-size: 6px;
@@ -94,7 +92,9 @@ body {
   background: var(--brand-blue-soft);
 }
 
-/* ── Navbar ── */
+/* ──────────────────────────────
+   NAVBAR
+────────────────────────────── */
 .navbar {
   background: linear-gradient(
     135deg,
@@ -114,16 +114,15 @@ body {
   font-weight: 800;
   font-size: 1.2rem;
   letter-spacing: -0.4px;
-  color: var(--text-white) !important;
+  color: #fff !important;
 }
 
 .navbar-brand img {
-  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
   transition: filter 0.3s var(--ease-out);
 }
-
 .navbar-brand:hover img {
-  filter: brightness(0) invert(1) drop-shadow(0 0 16px rgba(0, 212, 255, 0.9));
+  filter: drop-shadow(0 0 16px rgba(0, 212, 255, 0.85));
 }
 
 .nav-link {
@@ -162,12 +161,16 @@ body {
   transform: translateX(-50%) scaleX(1);
 }
 
-/* ── Main ── */
+/* ──────────────────────────────
+   MAIN
+────────────────────────────── */
 .theme-main {
   min-block-size: calc(100vh - 200px);
 }
 
-/* ── Hero Section ── */
+/* ──────────────────────────────
+   HERO SECTION
+────────────────────────────── */
 #inicio {
   background: linear-gradient(160deg, #e8eeff 0%, #f0f4ff 50%, #dde6ff 100%);
   position: relative;
@@ -205,34 +208,6 @@ body {
 }
 
 /* ── Imagem Hero ── */
-.hero-image {
-  max-block-size: 62vh;
-  inline-size: auto;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
-  transition:
-    transform 0.4s var(--ease-spring),
-    box-shadow 0.4s var(--ease-out);
-  position: relative;
-  z-index: 1;
-}
-
-.hero-image:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow:
-    var(--shadow-lg),
-    0 0 48px rgba(0, 212, 255, 0.32);
-}
-
-/* Suporte a múltiplos formatos de imagem */
-picture source,
-picture img {
-  display: block;
-  max-inline-size: 100%;
-  block-size: auto;
-}
-
-/* Container de imagem com aspect-ratio preservado */
 .hero-img-wrap {
   display: flex;
   justify-content: center;
@@ -240,21 +215,45 @@ picture img {
   padding: 1rem;
 }
 
-/* Fallback elegante se imagem não carregar */
-.hero-image[src=""],
-.hero-image:not([src]) {
-  min-block-size: 200px;
-  background: linear-gradient(
-    135deg,
-    var(--brand-blue) 0%,
-    var(--accent-cyan) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.navbar-brand img {
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+  transition: filter 0.3s var(--ease-out);
 }
 
-/* ── Headings ── */
+/* <picture> e <img> dentro dele */
+.hero-img-wrap picture {
+  display: block;
+  max-inline-size: 100%;
+}
+
+.hero-img-wrap picture img,
+.hero-image {
+  display: block;
+  max-inline-size: 100%;
+  inline-size: auto;
+  max-block-size: 60vh;
+  block-size: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  transition:
+    transform 0.4s var(--ease-spring),
+    box-shadow 0.4s var(--ease-out);
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+}
+
+.hero-img-wrap picture img:hover,
+.hero-image:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 48px rgba(0, 212, 255, 0.32);
+}
+
+/* ──────────────────────────────
+   TIPOGRAFIA
+────────────────────────────── */
 h1,
 h2,
 h3 {
@@ -286,7 +285,7 @@ h3 {
   font-weight: 400;
 }
 
-/* ── Section Titles ── */
+/* ── Títulos de seção ── */
 section h2 {
   font-size: clamp(1.4rem, 3vw, 2rem);
   color: var(--text-primary);
@@ -307,7 +306,9 @@ section h2::after {
   border-radius: 99px;
 }
 
-/* ── Cards ── */
+/* ──────────────────────────────
+   CARDS
+────────────────────────────── */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -324,7 +325,6 @@ section h2::after {
   display: block;
   block-size: 3px;
   background: linear-gradient(90deg, var(--brand-blue), var(--accent-cyan));
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .card:hover {
@@ -336,12 +336,14 @@ section h2::after {
   padding: 2rem;
 }
 
-/* ── Sections alternadas ── */
+/* ── Seções alternadas ── */
 .bg-light {
   background-color: var(--bg-section) !important;
 }
 
-/* ── Inputs & Selects ── */
+/* ──────────────────────────────
+   FORMULÁRIOS
+────────────────────────────── */
 .form-control,
 .form-select {
   background-color: var(--bg-input);
@@ -379,7 +381,9 @@ section h2::after {
   margin-block-end: 0.4rem;
 }
 
-/* ── Botões ── */
+/* ──────────────────────────────
+   BOTÕES
+────────────────────────────── */
 .btn {
   font-family: var(--font-display);
   font-weight: 600;
@@ -389,29 +393,14 @@ section h2::after {
   transition: all 0.25s var(--ease-out);
   letter-spacing: 0.02em;
   cursor: pointer;
-  border: none;
   position: relative;
   overflow: hidden;
-}
-
-.btn::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0);
-  transition: background 0.2s;
-  border-radius: inherit;
-}
-
-.btn:hover::after {
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
 .btn:active {
   transform: translateY(0);
 }
@@ -422,17 +411,17 @@ section h2::after {
     var(--brand-blue) 0%,
     var(--brand-blue-soft) 100%
   );
-  color: var(--text-white);
+  color: #fff;
+  border: none;
   box-shadow: var(--shadow-sm);
 }
-
 .btn-primary:hover {
   background: linear-gradient(
     135deg,
     var(--brand-blue-soft) 0%,
     var(--brand-blue) 100%
   );
-  color: var(--text-white);
+  color: #fff;
   box-shadow: 0 6px 20px rgba(15, 14, 154, 0.35);
 }
 
@@ -441,7 +430,6 @@ section h2::after {
   border: 1.5px solid var(--danger);
   color: var(--danger);
 }
-
 .btn-outline-danger:hover {
   background: var(--danger);
   color: #fff;
@@ -453,10 +441,14 @@ section h2::after {
   border: 1.5px solid var(--brand-blue-mid);
   color: var(--brand-blue-mid);
 }
-
 .btn-outline-primary:hover {
   background: var(--brand-blue-mid);
   color: #fff;
+}
+
+.btn-sm {
+  font-size: 0.78rem;
+  padding: 0.35rem 0.85rem;
 }
 
 /* Radio como botão de grupo */
@@ -471,7 +463,9 @@ section h2::after {
   box-shadow: 0 4px 12px rgba(15, 14, 154, 0.3);
 }
 
-/* ── Tabelas ── */
+/* ──────────────────────────────
+   TABELAS
+────────────────────────────── */
 .table {
   color: var(--text-primary);
   background-color: var(--bg-card);
@@ -539,7 +533,7 @@ section h2::after {
   font-weight: 600;
 }
 
-/* ── Result Tables ── */
+/* ── Tabelas de resultado ── */
 .result-table {
   inline-size: 100%;
   border-collapse: separate;
@@ -576,6 +570,7 @@ section h2::after {
   transition:
     background 0.18s,
     transform 0.18s;
+  animation: fadeIn 0.3s var(--ease-out) both;
 }
 
 .result-table tbody tr:hover {
@@ -583,7 +578,25 @@ section h2::after {
   transform: scale(1.005);
 }
 
-/* ── Código de Validade ── */
+.result-table tbody tr:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.result-table tbody tr:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.result-table tbody tr:nth-child(3) {
+  animation-delay: 0.15s;
+}
+.result-table tbody tr:nth-child(4) {
+  animation-delay: 0.2s;
+}
+.result-table tbody tr:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+/* ──────────────────────────────
+   CÓDIGO DE VALIDADE
+────────────────────────────── */
 #codigoValidade {
   font-family: var(--font-mono);
   font-size: 1rem;
@@ -609,7 +622,9 @@ section h2::after {
   box-shadow: var(--shadow-sm);
 }
 
-/* ── Alerts ── */
+/* ──────────────────────────────
+   ALERTS
+────────────────────────────── */
 .alert {
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
@@ -622,32 +637,30 @@ section h2::after {
   border-inline-start: 4px solid var(--success);
   color: #14532d;
 }
-
 .alert-info {
   background: rgba(8, 145, 178, 0.09);
   border-inline-start: 4px solid var(--info);
   color: #164e63;
 }
-
 .alert-warning {
   background: rgba(217, 119, 6, 0.09);
   border-inline-start: 4px solid var(--warning);
   color: #78350f;
 }
-
 .alert-danger {
   background: rgba(220, 38, 38, 0.09);
   border-inline-start: 4px solid var(--danger);
   color: #7f1d1d;
 }
-
 .alert-light {
   background: var(--bg-section);
   border-inline-start: 4px solid var(--border);
   color: var(--text-secondary);
 }
 
-/* ── Status Colors ── */
+/* ──────────────────────────────
+   CORES DE STATUS
+────────────────────────────── */
 .text-success {
   color: var(--success) !important;
 }
@@ -664,27 +677,29 @@ section h2::after {
   color: var(--text-muted) !important;
 }
 
-/* ── optgroup ── */
+/* ──────────────────────────────
+   OPTGROUP
+────────────────────────────── */
 optgroup {
   font-weight: 700;
   font-style: normal;
   color: var(--brand-blue);
   background: var(--bg-card);
 }
-
 optgroup option {
   font-weight: 400;
   color: var(--text-primary);
   background: var(--bg-input);
 }
 
-/* ── Loading State ── */
+/* ──────────────────────────────
+   LOADING
+────────────────────────────── */
 .loading {
   opacity: 0.65;
   pointer-events: none;
   position: relative;
 }
-
 .loading::after {
   content: "";
   position: absolute;
@@ -704,7 +719,9 @@ optgroup option {
   }
 }
 
-/* ── Animações ── */
+/* ──────────────────────────────
+   ANIMAÇÕES
+────────────────────────────── */
 .fade-in {
   animation: fadeIn 0.45s var(--ease-out) both;
 }
@@ -720,28 +737,9 @@ optgroup option {
   }
 }
 
-/* Stagger para listas de resultado */
-.result-table tbody tr {
-  animation: fadeIn 0.3s var(--ease-out) both;
-}
-
-.result-table tbody tr:nth-child(1) {
-  animation-delay: 0.05s;
-}
-.result-table tbody tr:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.result-table tbody tr:nth-child(3) {
-  animation-delay: 0.15s;
-}
-.result-table tbody tr:nth-child(4) {
-  animation-delay: 0.2s;
-}
-.result-table tbody tr:nth-child(5) {
-  animation-delay: 0.25s;
-}
-
-/* ── Acessibilidade ── */
+/* ──────────────────────────────
+   ACESSIBILIDADE
+────────────────────────────── */
 .btn:focus-visible,
 .form-control:focus-visible,
 .form-select:focus-visible {
@@ -749,18 +747,21 @@ optgroup option {
   outline-offset: 2px;
 }
 
-/* ── Footer ── */
+/* ──────────────────────────────
+   FOOTER
+────────────────────────────── */
 .theme-footer {
   background: linear-gradient(135deg, #0d0c2b 0%, #1a1940 100%) !important;
   color: rgba(255, 255, 255, 0.85) !important;
   border-block-start: 1px solid rgba(255, 255, 255, 0.06);
 }
-
 .theme-footer strong {
   color: var(--accent-cyan);
 }
 
-/* ── Print ── */
+/* ──────────────────────────────
+   PRINT
+────────────────────────────── */
 @media print {
   .navbar,
   .btn {
@@ -776,11 +777,15 @@ optgroup option {
   }
 }
 
-/* ── Responsividade ── */
+/* ──────────────────────────────
+   RESPONSIVIDADE
+────────────────────────────── */
 @media (max-width: 768px) {
+  .hero-img-wrap picture img,
   .hero-image {
     max-block-size: 42vh;
   }
+
   .card-body {
     padding: 1.25rem;
   }
@@ -802,6 +807,7 @@ optgroup option {
 }
 
 @media (max-width: 576px) {
+  .hero-img-wrap picture img,
   .hero-image {
     max-block-size: 32vh;
   }
@@ -811,7 +817,8 @@ optgroup option {
   }
 
   .container {
-    padding-inline: 0.75rem;
+    padding-inline-start: 0.75rem;
+    padding-inline-end: 0.75rem;
   }
 
   .result-table {
@@ -826,97 +833,5 @@ optgroup option {
   #codigoValidade code {
     font-size: 0.85rem;
     word-break: break-all;
-  }
-}
-
-@media (max-width: 992px) {
-  .hero-image {
-    max-block-size: 48vh;
-    margin: 0 auto;
-  }
-
-  .hero-txt h1 {
-    font-size: 2.2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .hero-image {
-    max-block-size: 38vh !important;
-    border-radius: 16px;
-  }
-
-  #inicio {
-    padding-top: 80px !important;
-  }
-
-  .hero-txt {
-    padding: 0 15px;
-  }
-
-  .display-5 {
-    font-size: 2rem !important;
-  }
-
-  .lead {
-    font-size: 1rem;
-  }
-
-  section h2 {
-    font-size: 1.75rem;
-  }
-
-  .card-body {
-    padding: 1.5rem;
-  }
-
-  /* Botões maiores em mobile */
-  .btn-lg {
-    padding: 0.8rem 1.2rem;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .hero-image {
-    max-block-size: 32vh !important;
-    width: 100% !important;
-    height: auto !important;
-    object-fit: contain;
-  }
-
-  .hero-img-wrap {
-    padding: 0.5rem 0;
-  }
-
-  .display-5 {
-    font-size: 1.85rem !important;
-  }
-
-  section h2 {
-    font-size: 1.6rem;
-  }
-
-  .container {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  /* Ajuste nos inputs em telas muito pequenas */
-  .form-control,
-  .form-select {
-    font-size: 1rem; /* Evita zoom automático no iOS */
-  }
-
-  /* Centraliza melhor os botões */
-  .d-grid.gap-3 {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Ajuste fino para tablets em orientação paisagem */
-@media (max-width: 768px) and (orientation: landscape) {
-  .hero-image {
-    max-block-size: 45vh;
   }
 }

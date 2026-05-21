@@ -1,751 +1,663 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SmartQuality 4.0</title>
-
-    <!-- Fontes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <!-- CSS próprio -->
-    <link rel="stylesheet" href="./CSS/style.css" />
-    <!-- Favicon -->
-    <link rel="icon" href="./Img/Logo SQ.png" type="image/png" />
-  </head>
-
-  <body>
-    <!-- ── Navbar ── -->
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-          <a
-            class="navbar-brand d-flex align-items-center gap-2"
-            href="#inicio"
-          >
-            SmartQuality 4.0
-          </a>
-
-          <button
-            class="navbar-toggler border-0"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Abrir menu"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto gap-1">
-              <li class="nav-item">
-                <a class="nav-link" href="#inicio"
-                  ><i class="fas fa-home me-1"></i>Home</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#tara-section"
-                  ><i class="fas fa-balance-scale me-1"></i>Tara</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#peso-section"
-                  ><i class="fas fa-weight me-1"></i>Peso</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#validade-section"
-                  ><i class="fas fa-calendar-check me-1"></i>Validade</a
-                >
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </header>
-
-    <main class="theme-main">
-      <!-- ── Hero ── -->
-      <section id="inicio" class="pt-5 mt-4">
-        <div class="container my-5">
-          <div class="row justify-content-center">
-            <div class="col-12 text-center mb-4 hero-img-wrap">
-              <img
-                src="./Img/Logo futurista SmartQuality 4.0.png"
-                alt="SmartQuality 4.0 — Sistema de Qualidade"
-                class="hero-image"
-              />
-            </div>
-
-            <div class="col-lg-8 text-center hero-txt">
-              <h1 class="display-5 fw-bold mb-3">SmartQuality 4.0</h1>
-              <p class="lead mb-4">
-                Sistema Digital de Manufatura e Qualidade.
-              </p>
-
-              <div
-                class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5"
-              >
-                <a href="#tara-section" class="btn btn-primary btn-lg px-4">
-                  <i class="fas fa-balance-scale me-2"></i>Verificar Tara
-                </a>
-                <a href="#peso-section" class="btn btn-primary btn-lg px-4">
-                  <i class="fas fa-weight me-2"></i>Verificar Peso
-                </a>
-                <a href="#validade-section" class="btn btn-primary btn-lg px-4">
-                  <i class="fas fa-calendar-check me-2"></i>Verificar Validade
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── TARA ── -->
-      <section id="tara-section" class="my-5 py-5">
-        <div class="container">
-          <h2 class="text-center mb-3">
-            <i class="fas fa-balance-scale me-2"></i>Verificação de Tara
-          </h2>
-
-          <div class="text-center mb-4">
-            <button
-              class="btn btn-info btn-sm"
-              data-bs-toggle="collapse"
-              data-bs-target="#explicacaoTara"
-            >
-              <i class="fas fa-question-circle me-2"></i> Como fazer a
-              Verificação de Tara?
-            </button>
-          </div>
-
-          <div class="collapse mb-4" id="explicacaoTara">
-            <div class="card border-info">
-              <div class="card-body bg-light">
-                <p><strong>Como fazer na prática (bem explicado):</strong></p>
-                <ul>
-                  <li>
-                    O inspetor ou operador pega
-                    <strong>5 ou 10 embalagens vazias</strong> (sem produto).
-                  </li>
-                  <li>Pesa cada embalagem na balança.</li>
-                  <li>Digita os valores aqui no sistema.</li>
-                  <li>
-                    O sistema calcula a média e mostra qual é a
-                    <strong>melhor tara</strong> (a mais próxima da média).
-                  </li>
-                  <li>
-                    Use essa tara recomendada para ajustar a máquina de envase.
-                  </li>
-                </ul>
-                <small class="text-muted"
-                  >Quanto menor o desvio padrão, melhor está a qualidade das
-                  embalagens.</small
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-center">
-            <div class="col-lg-8">
-              <div class="card shadow">
-                <div class="card-body">
-                  <form id="taraForm">
-                    <div class="row mb-4">
-                      <div class="col-md-6">
-                        <label class="form-label"
-                          >Quantidade de Amostras:</label
-                        >
-                        <div class="btn-group w-100" role="group">
-                          <input
-                            type="radio"
-                            class="btn-check"
-                            name="qtdAmostras"
-                            id="5amostras"
-                            autocomplete="off"
-                            checked
-                          />
-                          <label class="btn btn-outline-primary" for="5amostras"
-                            >5 Amostras</label
-                          >
-                          <input
-                            type="radio"
-                            class="btn-check"
-                            name="qtdAmostras"
-                            id="10amostras"
-                            autocomplete="off"
-                          />
-                          <label
-                            class="btn btn-outline-primary"
-                            for="10amostras"
-                            >10 Amostras</label
-                          >
-                        </div>
-                      </div>
-                    </div>
-
-                    <div id="taraInputsContainer">
-                      <div class="row g-3" id="5amostrasFields">
-                        <div class="col-md-6">
-                          <label for="tara1" class="form-label"
-                            >Tara Amostra 01 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara1"
-                            placeholder="0.00"
-                            required
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara2" class="form-label"
-                            >Tara Amostra 02 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara2"
-                            placeholder="0.00"
-                            required
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara3" class="form-label"
-                            >Tara Amostra 03 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara3"
-                            placeholder="0.00"
-                            required
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara4" class="form-label"
-                            >Tara Amostra 04 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara4"
-                            placeholder="0.00"
-                            required
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara5" class="form-label"
-                            >Tara Amostra 05 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara5"
-                            placeholder="0.00"
-                            required
-                          />
-                        </div>
-                      </div>
-
-                      <div class="row g-3 mt-3 d-none" id="10amostrasFields">
-                        <div class="col-md-6">
-                          <label for="tara6" class="form-label"
-                            >Tara Amostra 06 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara6"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara7" class="form-label"
-                            >Tara Amostra 07 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara7"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara8" class="form-label"
-                            >Tara Amostra 08 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara8"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara9" class="form-label"
-                            >Tara Amostra 09 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara9"
-                            placeholder="0.00"
-                          />
-                        </div>
-                        <div class="col-md-6">
-                          <label for="tara10" class="form-label"
-                            >Tara Amostra 10 (kg)</label
-                          ><input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            id="tara10"
-                            placeholder="0.00"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div
-                      class="d-grid gap-2 d-md-flex justify-content-md-end mt-4"
-                    >
-                      <button
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SmartQuality 4.0</title>
+        <!-- Fontes modernas -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="./CSS/style.css">
+        <link rel="icon" href="./Img/Logo SQ.png" type="image/png">
+    </head>
+    <body>
+        <!-- ── Navbar ── -->
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="#inicio">
+                        <img
+                            src="./Img/png-unilever-white-logo.png"
+                            alt="Logo Unilever"
+                            width="40"
+                            height="40"
+                            class="me-2"
+                        />
+                        <span class="d-none d-md-inline">SmartQuality 4.0</span>
+                    </a>
+                    <button
+                        class="navbar-toggler border-0"
                         type="button"
-                        id="limparTara"
-                        class="btn btn-outline-danger me-md-2"
-                      >
-                        <i class="fas fa-broom me-2"></i>Limpar
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator me-2"></i>Calcular
-                      </button>
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarNav"
+                        aria-controls="navbarNav"
+                        aria-expanded="false"
+                        aria-label="Abrir menu"
+                    >
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto gap-1">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#inicio">
+                                    <i class="fas fa-home me-1"></i>
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#tara-section">
+                                    <i class="fas fa-balance-scale me-1"></i>
+                                    Tara
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#peso-section">
+                                    <i class="fas fa-weight me-1"></i>
+                                    Peso
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#validade-section">
+                                    <i class="fas fa-calendar-check me-1"></i>
+                                    Validade
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                  </form>
-
-                  <div id="resultadoTara" class="mt-4 p-4 rounded d-none">
-                    <h5 class="mb-3">
-                      <i class="fas fa-clipboard-check me-2"></i>Resultado da
+                </div>
+            </nav>
+        </header>
+        <main class="theme-main">
+            <!-- ── Hero ── -->
+            <section id="inicio" class="pt-5 mt-4">
+                <div class="container my-5">
+                    <div class="row justify-content-center">
+                        <!-- Imagem Hero com suporte a múltiplos formatos -->
+                        <div class="col-12 text-center mb-4 hero-img-wrap" style="position:relative;z-index:1;">
+                            <picture>
+                                <!-- WebP moderno (melhor compressão) -->
+                                <source type="image/webp" media="(max-inline-size: 768px)" srcset="./Img/Imagem-Inspetor-mobile.webp">
+                                <source type="image/webp" media="(min-inline-size: 769px)" srcset="./Img/Imagem-Inspetor-desktop.webp">
+                                <!-- PNG fallback mobile -->
+                                <source media="(max-inline-size: 768px)" srcset="./Img/Imagem-Inspetor-mobile.png">
+                                <!-- PNG fallback desktop -->
+                                <source media="(min-inline-size: 769px)" srcset="./Img/Imagem-Inspetor-desktop.png">
+                                <!-- Fallback final (obrigatório) -->
+                                <img
+                                    src="./Img/Logo futurista SmartQuality 4.0.png"
+                                    alt="SmartQuality 4.0 — Sistema de Qualidade"
+                                    class="img-fluid hero-image"
+                                    loading="eager"
+                                    decoding="async"
+                                    width="800"
+                                    height="500"
+                                >
+                            </picture>
+                        </div>
+                        <div class="col-lg-8 text-center">
+                            <h1 class="display-5 fw-bold mb-3">SmartQuality 4.0</h1>
+                            <p class="lead mb-4">
+                                Sistema Digital de Manufatura e Qualidade.
+                            </p>
+                            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mb-5">
+                                <a href="#tara-section" class="btn btn-primary btn-lg px-4">
+                                    <i class="fas fa-balance-scale me-2"></i>
+                                    Verificar Tara
+                                </a>
+                                <a href="#peso-section" class="btn btn-primary btn-lg px-4">
+                                    <i class="fas fa-weight me-2"></i>
+                                    Verificar Peso
+                                </a>
+                                <a href="#validade-section" class="btn btn-primary btn-lg px-4">
+                                    <i class="fas fa-calendar-check me-2"></i>
+                                    Verificar Validade
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ── Tara ── -->
+            <section id="tara-section" class="my-5 py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">
+                        <i class="fas fa-balance-scale me-2"></i>
+                        Verificação de Tara
+                    </h2>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <form id="taraForm">
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <label class="form-label">
+                                                    Quantidade de Amostras:
+                                                </label
+                        >
+                                                <div class="btn-group w-100" role="group">
+                                                    <input
+                                                        type="radio"
+                                                        class="btn-check"
+                                                        name="qtdAmostras"
+                                                        id="5amostras"
+                                                        autocomplete="off"
+                                                        checked
+                                                    >
+                                                    <label class="btn btn-outline-primary" for="5amostras">
+                                                        5 Amostras
+                                                    </label
+                          >
+                                                    <input
+                                                        type="radio"
+                                                        class="btn-check"
+                                                        name="qtdAmostras"
+                                                        id="10amostras"
+                                                        autocomplete="off"
+                                                    >
+                                                    <label class="btn btn-outline-primary" for="10amostras">
+                                                        10 Amostras
+                                                    </label
+                          >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="taraInputsContainer">
+                                            <div class="row g-3" id="5amostrasFields">
+                                                <div class="col-md-6">
+                                                    <label for="tara1" class="form-label">
+                                                        Tara Amostra 01 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara1"
+                                                        placeholder="0.00"
+                                                        required
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara2" class="form-label">
+                                                        Tara Amostra 02 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara2"
+                                                        placeholder="0.00"
+                                                        required
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara3" class="form-label">
+                                                        Tara Amostra 03 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara3"
+                                                        placeholder="0.00"
+                                                        required
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara4" class="form-label">
+                                                        Tara Amostra 04 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara4"
+                                                        placeholder="0.00"
+                                                        required
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara5" class="form-label">
+                                                        Tara Amostra 05 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara5"
+                                                        placeholder="0.00"
+                                                        required
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="row g-3 mt-3 d-none" id="10amostrasFields">
+                                                <div class="col-md-6">
+                                                    <label for="tara6" class="form-label">
+                                                        Tara Amostra 06 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara6"
+                                                        placeholder="0.00"
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara7" class="form-label">
+                                                        Tara Amostra 07 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara7"
+                                                        placeholder="0.00"
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara8" class="form-label">
+                                                        Tara Amostra 08 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara8"
+                                                        placeholder="0.00"
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara9" class="form-label">
+                                                        Tara Amostra 09 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara9"
+                                                        placeholder="0.00"
+                                                    >
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="tara10" class="form-label">
+                                                        Tara Amostra 10 (kg)
+                                                    </label
+                          >
+                                                    <input
+                                                        type="number"
+                                                        step="0.01"
+                                                        min="0"
+                                                        class="form-control"
+                                                        id="tara10"
+                                                        placeholder="0.00"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                            <button type="button" id="limparTara" class="btn btn-outline-danger me-md-2">
+                                                <i class="fas fa-broom me-2"></i>
+                                                Limpar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-calculator me-2"></i>
+                                                Calcular
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div id="resultadoTara" class="mt-4 p-4 rounded d-none">
+                                        <h5 class="mb-3">
+                                            <i class="fas fa-clipboard-check me-2"></i>
+                                            Resultado da
                       Verificação de Tara
-                    </h5>
-                    <div id="taraDetails"></div>
-                    <div
-                      id="taraRecomendacao"
-                      class="mt-3 alert alert-info"
-                    ></div>
-                  </div>
+                                        </h5>
+                                        <div id="taraDetails"></div>
+                                        <div id="taraRecomendacao" class="mt-3 alert alert-info"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── PESO ── -->
-      <section id="peso-section" class="my-5 py-5 bg-light rounded-3">
-        <div class="container">
-          <h2 class="text-center mb-3">
-            <i class="fas fa-weight me-2"></i>Verificação de Peso
-          </h2>
-
-          <div class="text-center mb-4">
-            <button
-              class="btn btn-info btn-sm"
-              data-bs-toggle="collapse"
-              data-bs-target="#explicacaoPeso"
-            >
-              <i class="fas fa-question-circle me-2"></i> Como fazer a
-              Verificação de Peso?
-            </button>
-          </div>
-
-          <div class="collapse mb-4" id="explicacaoPeso">
-            <div class="card border-info">
-              <div class="card-body bg-light">
-                <p><strong>Como fazer na prática:</strong></p>
-                <ul>
-                  <li>Olhe o peso padrão no checklist do SAP.</li>
-                  <li>
-                    Pegue <strong>5 amostras cheias</strong> da linha de
-                    produção.
-                  </li>
-                  <li>Pese cada uma e digite aqui.</li>
-                  <li>
-                    Se o peso estiver baixo → avise o operador para aumentar o
-                    enchimento.
-                  </li>
-                  <li>Se estiver bom → pode registrar no CEP Online.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-center">
-            <div class="col-lg-8">
-              <div class="card shadow">
-                <div class="card-body">
-                  <form id="pesoForm">
-                    <p class="text-muted mb-4">
-                      Insira os pesos das 5 amostras e o peso padrão esperado
-                      (em kg):
-                    </p>
-
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <label for="peso1" class="form-label"
-                          >Peso Amostra 01 (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="peso1"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label for="peso2" class="form-label"
-                          >Peso Amostra 02 (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="peso2"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label for="peso3" class="form-label"
-                          >Peso Amostra 03 (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="peso3"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label for="peso4" class="form-label"
-                          >Peso Amostra 04 (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="peso4"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label for="peso5" class="form-label"
-                          >Peso Amostra 05 (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="peso5"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                      <div class="col-md-6">
-                        <label for="pesoPadrao" class="form-label"
-                          >Peso Padrão Esperado (kg)</label
-                        ><input
-                          type="number"
-                          step="0.01"
-                          min="0"
-                          class="form-control"
-                          id="pesoPadrao"
-                          placeholder="0.00"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div
-                      class="d-grid gap-2 d-md-flex justify-content-md-end mt-4"
-                    >
-                      <button
-                        type="button"
-                        id="limparPeso"
-                        class="btn btn-outline-danger me-md-2"
-                      >
-                        <i class="fas fa-broom me-2"></i>Limpar
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator me-2"></i>Calcular
-                      </button>
-                    </div>
-                  </form>
-
-                  <div id="resultadoPeso" class="mt-4 p-4 rounded d-none">
-                    <h5 class="mb-3">
-                      <i class="fas fa-clipboard-check me-2"></i>Resultado da
+            </section>
+            <!-- ── Peso ── -->
+            <section id="peso-section" class="my-5 py-5 bg-light rounded-3">
+                <div class="container">
+                    <h2 class="text-center mb-5">
+                        <i class="fas fa-weight me-2"></i>
+                        Verificação de Peso
+                    </h2>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <form id="pesoForm">
+                                        <p class="text-muted mb-4">
+                                            Insira os pesos das 5 amostras do produto e o peso padrão
+                      esperado (em kg):
+                                        </p>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="peso1" class="form-label">
+                                                    Peso Amostra 01 (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="peso1"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="peso2" class="form-label">
+                                                    Peso Amostra 02 (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="peso2"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="peso3" class="form-label">
+                                                    Peso Amostra 03 (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="peso3"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="peso4" class="form-label">
+                                                    Peso Amostra 04 (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="peso4"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="peso5" class="form-label">
+                                                    Peso Amostra 05 (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="peso5"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pesoPadrao" class="form-label">
+                                                    Peso Padrão Esperado (kg)
+                                                </label
+                        >
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    class="form-control"
+                                                    id="pesoPadrao"
+                                                    placeholder="0.00"
+                                                    required
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                            <button type="button" id="limparPeso" class="btn btn-outline-danger me-md-2">
+                                                <i class="fas fa-broom me-2"></i>
+                                                Limpar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-calculator me-2"></i>
+                                                Calcular
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div id="resultadoPeso" class="mt-4 p-4 rounded d-none">
+                                        <h5 class="mb-3">
+                                            <i class="fas fa-clipboard-check me-2"></i>
+                                            Resultado da
                       Verificação de Peso
-                    </h5>
-                    <div id="pesoDetails"></div>
-                    <div id="pesoStatus" class="mt-3 fw-bold"></div>
-                  </div>
+                                        </h5>
+                                        <div id="pesoDetails"></div>
+                                        <div id="pesoStatus" class="mt-3 fw-bold"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ── VALIDADE ── -->
-      <section id="validade-section" class="my-5 py-5">
-        <div class="container">
-          <h2 class="text-center mb-3">
-            <i class="fas fa-calendar-check me-2"></i>Verificação de Validade
-          </h2>
-
-          <div class="text-center mb-4">
-            <button
-              class="btn btn-info btn-sm"
-              data-bs-toggle="collapse"
-              data-bs-target="#explicacaoValidade"
-            >
-              <i class="fas fa-question-circle me-2"></i> Como fazer a
-              Verificação de Validade?
-            </button>
-          </div>
-
-          <div class="collapse mb-4" id="explicacaoValidade">
-            <div class="card border-info">
-              <div class="card-body bg-light">
-                <p><strong>Como fazer na prática:</strong></p>
-                <ul>
-                  <li>
-                    Olhe no <strong>rótulo, contra-rótulo ou sleeve</strong> do
-                    produto.
-                  </li>
-                  <li>Identifique a Linha, Mês, Ano e Horário de produção.</li>
-                  <li>Preencha os campos abaixo.</li>
-                  <li>O sistema calcula a data de validade e gera o código.</li>
-                  <li>
-                    Se estiver vencido, separe o produto conforme CRQS/PQS.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="row justify-content-center">
-            <div class="col-lg-8">
-              <div class="card shadow">
-                <div class="card-body">
-                  <form id="validadeForm">
-                    <!-- Formulário de validade mantido igual -->
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <label for="linhaProduto" class="form-label"
-                          >Linha de Produção</label
+            </section>
+            <!-- ── Validade ── -->
+            <section id="validade-section" class="my-5 py-5">
+                <div class="container">
+                    <h2 class="text-center mb-5">
+                        <i class="fas fa-calendar-check me-2"></i>
+                        Verificação de Validade
+                    </h2>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <form id="validadeForm">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="linhaProduto" class="form-label">
+                                                    Linha de Produção
+                                                </label
                         >
-                        <select class="form-select" id="linhaProduto" required>
-                          <option value="" selected disabled>
-                            Selecione a Linha
-                          </option>
-                          <optgroup label="Hair">
-                            <option value="S01">S01 (A)</option>
-                            <option value="S03">S03 (B)</option>
-                            <option value="S05">S05 (C)</option>
-                            <option value="S08">S08 (D)</option>
-                            <option value="S10">S10 (E)</option>
-                            <option value="S11">S11 (F)</option>
-                            <option value="S12">S12 (G)</option>
-                            <option value="S14">S14 (H)</option>
-                          </optgroup>
-                          <optgroup label="Deo">
-                            <option value="D11">D11 (K)</option>
-                            <option value="D12">D12 (L)</option>
-                          </optgroup>
-                          <optgroup label="HC">
-                            <option value="A01">A01 (M)</option>
-                            <option value="A02">A02 (T)</option>
-                            <option value="A03">A03 (O)</option>
-                            <option value="A04">A04 (P)</option>
-                            <option value="A07">A07 (S)</option>
-                            <option value="A06">A06 (X)</option>
-                            <option value="A08">A08 (Z)</option>
-                          </optgroup>
-                        </select>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label for="mesValidade" class="form-label"
-                          >Mês de Produção</label
+                                                <select class="form-select" id="linhaProduto" required>
+                                                    <option value="" selected disabled>
+                                                        Selecione a Linha
+                                                    </option>
+                                                    <optgroup label="Hair">
+                                                        <option value="S01">S01 (A)</option>
+                                                        <option value="S03">S03 (B)</option>
+                                                        <option value="S05">S05 (C)</option>
+                                                        <option value="S08">S08 (D)</option>
+                                                        <option value="S10">S10 (E)</option>
+                                                        <option value="S11">S11 (F)</option>
+                                                        <option value="S12">S12 (G)</option>
+                                                        <option value="S14">S14 (H)</option>
+                                                    </optgroup>
+                                                    <optgroup label="Deo">
+                                                        <option value="D11">D11 (K)</option>
+                                                        <option value="D12">D12 (L)</option>
+                                                    </optgroup>
+                                                    <optgroup label="HC">
+                                                        <option value="A01">A01 (M)</option>
+                                                        <option value="A02">A02 (T)</option>
+                                                        <option value="A03">A03 (O)</option>
+                                                        <option value="A04">A04 (P)</option>
+                                                        <option value="A07">A07 (S)</option>
+                                                        <option value="A06">A06 (X)</option>
+                                                        <option value="A08">A08 (Z)</option>
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="mesValidade" class="form-label">
+                                                    Mês de Produção
+                                                </label
                         >
-                        <select class="form-select" id="mesValidade" required>
-                          <option value="" selected disabled>
-                            Selecione o Mês
-                          </option>
-                          <option value="1">Janeiro (A)</option>
-                          <option value="2">Fevereiro (B)</option>
-                          <option value="3">Março (C)</option>
-                          <option value="4">Abril (D)</option>
-                          <option value="5">Maio (E)</option>
-                          <option value="6">Junho (F)</option>
-                          <option value="7">Julho (G)</option>
-                          <option value="8">Agosto (H)</option>
-                          <option value="9">Setembro (I)</option>
-                          <option value="10">Outubro (J)</option>
-                          <option value="11">Novembro (K)</option>
-                          <option value="12">Dezembro (L)</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label for="anoValidade" class="form-label"
-                          >Ano de Produção</label
+                                                <select class="form-select" id="mesValidade" required>
+                                                    <option value="" selected disabled>
+                                                        Selecione o Mês
+                                                    </option>
+                                                    <option value="1">Janeiro (A)</option>
+                                                    <option value="2">Fevereiro (B)</option>
+                                                    <option value="3">Março (C)</option>
+                                                    <option value="4">Abril (D)</option>
+                                                    <option value="5">Maio (E)</option>
+                                                    <option value="6">Junho (F)</option>
+                                                    <option value="7">Julho (G)</option>
+                                                    <option value="8">Agosto (H)</option>
+                                                    <option value="9">Setembro (I)</option>
+                                                    <option value="10">Outubro (J)</option>
+                                                    <option value="11">Novembro (K)</option>
+                                                    <option value="12">Dezembro (L)</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="anoValidade" class="form-label">
+                                                    Ano de Produção
+                                                </label
                         >
-                        <select class="form-select" id="anoValidade" required>
-                          <option value="" selected disabled>
-                            Selecione o Ano
-                          </option>
-                          <option value="2021">2021 (E)</option>
-                          <option value="2022">2022 (F)</option>
-                          <option value="2023">2023 (G)</option>
-                          <option value="2024">2024 (H)</option>
-                          <option value="2025">2025 (I)</option>
-                          <option value="2026">2026 (J)</option>
-                          <option value="2027">2027 (K)</option>
-                          <option value="2028">2028 (L)</option>
-                          <option value="2029">2029 (M)</option>
-                          <option value="2030">2030 (N)</option>
-                          <option value="2031">2031 (O)</option>
-                          <option value="2032">2032 (P)</option>
-                          <option value="2033">2033 (Q)</option>
-                          <option value="2034">2034 (R)</option>
-                          <option value="2035">2035 (S)</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label for="tempoValidade" class="form-label"
-                          >Validade (meses)</label
+                                                <select class="form-select" id="anoValidade" required>
+                                                    <option value="" selected disabled>
+                                                        Selecione o Ano
+                                                    </option>
+                                                    <option value="2021">2021 (E)</option>
+                                                    <option value="2022">2022 (F)</option>
+                                                    <option value="2023">2023 (G)</option>
+                                                    <option value="2024">2024 (H)</option>
+                                                    <option value="2025">2025 (I)</option>
+                                                    <option value="2026">2026 (J)</option>
+                                                    <option value="2027">2027 (K)</option>
+                                                    <option value="2028">2028 (L)</option>
+                                                    <option value="2029">2029 (M)</option>
+                                                    <option value="2030">2030 (N)</option>
+                                                    <option value="2031">2031 (O)</option>
+                                                    <option value="2032">2032 (P)</option>
+                                                    <option value="2033">2033 (Q)</option>
+                                                    <option value="2034">2034 (R)</option>
+                                                    <option value="2035">2035 (S)</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="tempoValidade" class="form-label">
+                                                    Validade (meses)
+                                                </label
                         >
-                        <select class="form-select" id="tempoValidade" required>
-                          <option value="16">16 meses</option>
-                          <option value="18">18 meses</option>
-                          <option value="24">24 meses</option>
-                          <option value="36">36 meses</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-6">
-                        <label for="horaProducao" class="form-label"
-                          >Horário de Produção</label
+                                                <select class="form-select" id="tempoValidade" required>
+                                                    <option value="16">16 meses</option>
+                                                    <option value="18">18 meses</option>
+                                                    <option value="24">24 meses</option>
+                                                    <option value="36">36 meses</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="horaProducao" class="form-label">
+                                                    Horário de Produção
+                                                </label
                         >
-                        <input
-                          type="time"
-                          class="form-control"
-                          id="horaProducao"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div
-                      class="d-grid gap-2 d-md-flex justify-content-md-end mt-4"
-                    >
-                      <button
-                        type="button"
-                        id="limparValidade"
-                        class="btn btn-outline-danger me-md-2"
-                      >
-                        <i class="fas fa-broom me-2"></i>Limpar
-                      </button>
-                      <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-calculator me-2"></i>Calcular Validade
-                      </button>
-                    </div>
-                  </form>
-
-                  <div id="resultadoValidade" class="mt-4 p-4 rounded d-none">
-                    <h5 class="mb-3">
-                      <i class="fas fa-clipboard-check me-2"></i>Resultado da
+                                                <input
+                                                    type="time"
+                                                    class="form-control"
+                                                    id="horaProducao"
+                                                    required
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                            <button type="button" id="limparValidade" class="btn btn-outline-danger me-md-2">
+                                                <i class="fas fa-broom me-2"></i>
+                                                Limpar
+                                            </button>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-calculator me-2"></i>
+                                                Calcular Validade
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div id="resultadoValidade" class="mt-4 p-4 rounded d-none">
+                                        <h5 class="mb-3">
+                                            <i class="fas fa-clipboard-check me-2"></i>
+                                            Resultado da
                       Verificação de Validade
-                    </h5>
-                    <div id="validadeDetails"></div>
-                    <div id="validadeStatus" class="mt-3 fw-bold"></div>
-                    <div id="codigoValidade" class="mt-3 p-3 rounded"></div>
-                  </div>
+                                        </h5>
+                                        <div id="validadeDetails"></div>
+                                        <div id="validadeStatus" class="mt-3 fw-bold"></div>
+                                        <div id="codigoValidade" class="mt-3 p-3 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- ── Footer ── -->
-    <footer class="py-4 mt-5 theme-footer">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0 opacity-75">
-              &copy; <span id="ano-atual"></span> DEV Libras Júnior. Todos os
+            </section>
+        </main>
+        <!-- ── Footer ── -->
+        <footer class="py-4 mt-5 theme-footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="mb-0 opacity-75">
+                            &copy;
+                            <span id="ano-atual"></span>
+                            DEV Libras Júnior. Todos os
               direitos reservados.
-            </p>
-          </div>
-          <div class="col-md-6 text-center text-md-end">
-            <p class="mb-0 opacity-75">
-              Desenvolvido por <strong>Nelson Junior</strong>
-            </p>
-          </div>
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <p class="mb-0 opacity-75">
+                            Desenvolvido por
+                            <strong>Nelson Junior</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- VLibras Acessibilidade -->
+        <div vw class="enabled">
+            <div vw-access-button class="active"></div>
+            <div vw-plugin-wrapper>
+                <div class="vw-plugin-top-wrapper"></div>
+            </div>
         </div>
-      </div>
-    </footer>
-
-    <!-- VLibras -->
-    <div vw class="enabled">
-      <div vw-access-button class="active"></div>
-      <div vw-plugin-wrapper>
-        <div class="vw-plugin-top-wrapper"></div>
-      </div>
-    </div>
-    <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
-    <script>
+        <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+        <script>
       new window.VLibras.Widget("https://vlibras.gov.br/app");
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./JS/script.js"></script>
-  </body>
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="./JS/script.js"></script>
+    </body>
 </html>
