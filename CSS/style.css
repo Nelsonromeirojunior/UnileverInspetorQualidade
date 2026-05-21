@@ -1,10 +1,7 @@
 /* ============================================
-   SmartQuality 4.0 — CSS Moderno (Corrigido)
-   Sem modo claro/escuro. Tema único.
+   SmartQuality 4.0 — CSS Moderno
+   Tema único, sem alternância claro/escuro
    ============================================ */
-
-/* @import DEVE vir antes de tudo */
-@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
 
 /* ── Variáveis Globais ── */
 :root {
@@ -13,6 +10,7 @@
   --brand-blue-mid: #1a19c4;
   --brand-blue-soft: #2826e0;
   --accent-cyan: #00d4ff;
+  --accent-glow: rgba(0, 212, 255, 0.18);
 
   /* Backgrounds */
   --bg-page: #f0f4ff;
@@ -24,6 +22,7 @@
   --text-primary: #0d0c2b;
   --text-secondary: #4a4870;
   --text-muted: #8888aa;
+  --text-white: #ffffff;
 
   /* Bordas & sombras */
   --border: #c8d0f0;
@@ -47,7 +46,7 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* Raios */
+  /* Espaçamento */
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
@@ -77,6 +76,9 @@ body {
   overflow-x: hidden;
 }
 
+/* Importar fontes modernas via Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap");
+
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
   inline-size: 6px;
@@ -92,9 +94,7 @@ body {
   background: var(--brand-blue-soft);
 }
 
-/* ──────────────────────────────
-   NAVBAR
-────────────────────────────── */
+/* ── Navbar ── */
 .navbar {
   background: linear-gradient(
     135deg,
@@ -114,15 +114,16 @@ body {
   font-weight: 800;
   font-size: 1.2rem;
   letter-spacing: -0.4px;
-  color: #fff !important;
+  color: var(--text-white) !important;
 }
 
 .navbar-brand img {
-  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(0, 212, 255, 0.5));
   transition: filter 0.3s var(--ease-out);
 }
+
 .navbar-brand:hover img {
-  filter: drop-shadow(0 0 16px rgba(0, 212, 255, 0.85));
+  filter: brightness(0) invert(1) drop-shadow(0 0 16px rgba(0, 212, 255, 0.9));
 }
 
 .nav-link {
@@ -161,16 +162,12 @@ body {
   transform: translateX(-50%) scaleX(1);
 }
 
-/* ──────────────────────────────
-   MAIN
-────────────────────────────── */
+/* ── Main ── */
 .theme-main {
   min-block-size: calc(100vh - 200px);
 }
 
-/* ──────────────────────────────
-   HERO SECTION
-────────────────────────────── */
+/* ── Hero Section ── */
 #inicio {
   background: linear-gradient(160deg, #e8eeff 0%, #f0f4ff 50%, #dde6ff 100%);
   position: relative;
@@ -208,31 +205,9 @@ body {
 }
 
 /* ── Imagem Hero ── */
-.hero-img-wrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-
-.navbar-brand img {
-  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
-  transition: filter 0.3s var(--ease-out);
-}
-
-/* <picture> e <img> dentro dele */
-.hero-img-wrap picture {
-  display: block;
-  max-inline-size: 100%;
-}
-
-.hero-img-wrap picture img,
 .hero-image {
-  display: block;
-  max-inline-size: 100%;
+  max-block-size: 62vh;
   inline-size: auto;
-  max-block-size: 60vh;
-  block-size: auto;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg), var(--shadow-glow);
   transition:
@@ -240,10 +215,8 @@ body {
     box-shadow 0.4s var(--ease-out);
   position: relative;
   z-index: 1;
-  margin: 0 auto;
 }
 
-.hero-img-wrap picture img:hover,
 .hero-image:hover {
   transform: translateY(-6px) scale(1.02);
   box-shadow:
@@ -251,9 +224,22 @@ body {
     0 0 48px rgba(0, 212, 255, 0.32);
 }
 
-/* ──────────────────────────────
-   TIPOGRAFIA
-────────────────────────────── */
+/* Suporte a múltiplos formatos de imagem */
+picture source,
+picture img {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.hero-img-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* ── Headings ── */
 h1,
 h2,
 h3 {
@@ -285,7 +271,7 @@ h3 {
   font-weight: 400;
 }
 
-/* ── Títulos de seção ── */
+/* ── Section Titles ── */
 section h2 {
   font-size: clamp(1.4rem, 3vw, 2rem);
   color: var(--text-primary);
@@ -306,9 +292,7 @@ section h2::after {
   border-radius: 99px;
 }
 
-/* ──────────────────────────────
-   CARDS
-────────────────────────────── */
+/* ── Cards ── */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -325,6 +309,7 @@ section h2::after {
   display: block;
   block-size: 3px;
   background: linear-gradient(90deg, var(--brand-blue), var(--accent-cyan));
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
 
 .card:hover {
@@ -336,14 +321,12 @@ section h2::after {
   padding: 2rem;
 }
 
-/* ── Seções alternadas ── */
+/* ── Sections alternadas ── */
 .bg-light {
   background-color: var(--bg-section) !important;
 }
 
-/* ──────────────────────────────
-   FORMULÁRIOS
-────────────────────────────── */
+/* ── Inputs & Selects ── */
 .form-control,
 .form-select {
   background-color: var(--bg-input);
@@ -381,9 +364,7 @@ section h2::after {
   margin-block-end: 0.4rem;
 }
 
-/* ──────────────────────────────
-   BOTÕES
-────────────────────────────── */
+/* ── Botões ── */
 .btn {
   font-family: var(--font-display);
   font-weight: 600;
@@ -393,14 +374,29 @@ section h2::after {
   transition: all 0.25s var(--ease-out);
   letter-spacing: 0.02em;
   cursor: pointer;
+  border: none;
   position: relative;
   overflow: hidden;
+}
+
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0);
+  transition: background 0.2s;
+  border-radius: inherit;
+}
+
+.btn:hover::after {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
+
 .btn:active {
   transform: translateY(0);
 }
@@ -411,17 +407,17 @@ section h2::after {
     var(--brand-blue) 0%,
     var(--brand-blue-soft) 100%
   );
-  color: #fff;
-  border: none;
+  color: var(--text-white);
   box-shadow: var(--shadow-sm);
 }
+
 .btn-primary:hover {
   background: linear-gradient(
     135deg,
     var(--brand-blue-soft) 0%,
     var(--brand-blue) 100%
   );
-  color: #fff;
+  color: var(--text-white);
   box-shadow: 0 6px 20px rgba(15, 14, 154, 0.35);
 }
 
@@ -430,6 +426,7 @@ section h2::after {
   border: 1.5px solid var(--danger);
   color: var(--danger);
 }
+
 .btn-outline-danger:hover {
   background: var(--danger);
   color: #fff;
@@ -441,14 +438,10 @@ section h2::after {
   border: 1.5px solid var(--brand-blue-mid);
   color: var(--brand-blue-mid);
 }
+
 .btn-outline-primary:hover {
   background: var(--brand-blue-mid);
   color: #fff;
-}
-
-.btn-sm {
-  font-size: 0.78rem;
-  padding: 0.35rem 0.85rem;
 }
 
 /* Radio como botão de grupo */
@@ -463,9 +456,7 @@ section h2::after {
   box-shadow: 0 4px 12px rgba(15, 14, 154, 0.3);
 }
 
-/* ──────────────────────────────
-   TABELAS
-────────────────────────────── */
+/* ── Tabelas ── */
 .table {
   color: var(--text-primary);
   background-color: var(--bg-card);
@@ -501,39 +492,14 @@ section h2::after {
   font-weight: 700;
 }
 
-.table-success {
+.table-success,
+.table-warning,
+.table-info,
+.table-danger {
   background: rgba(22, 163, 74, 0.08) !important;
 }
-.table-success td {
-  color: var(--success) !important;
-  font-weight: 600;
-}
 
-.table-warning {
-  background: rgba(217, 119, 6, 0.08) !important;
-}
-.table-warning td {
-  color: var(--warning) !important;
-  font-weight: 600;
-}
-
-.table-info {
-  background: rgba(8, 145, 178, 0.08) !important;
-}
-.table-info td {
-  color: var(--info) !important;
-  font-weight: 600;
-}
-
-.table-danger {
-  background: rgba(220, 38, 38, 0.08) !important;
-}
-.table-danger td {
-  color: var(--danger) !important;
-  font-weight: 600;
-}
-
-/* ── Tabelas de resultado ── */
+/* ── Result Tables ── */
 .result-table {
   inline-size: 100%;
   border-collapse: separate;
@@ -570,7 +536,6 @@ section h2::after {
   transition:
     background 0.18s,
     transform 0.18s;
-  animation: fadeIn 0.3s var(--ease-out) both;
 }
 
 .result-table tbody tr:hover {
@@ -578,53 +543,47 @@ section h2::after {
   transform: scale(1.005);
 }
 
-.result-table tbody tr:nth-child(1) {
-  animation-delay: 0.05s;
-}
-.result-table tbody tr:nth-child(2) {
-  animation-delay: 0.1s;
-}
-.result-table tbody tr:nth-child(3) {
-  animation-delay: 0.15s;
-}
-.result-table tbody tr:nth-child(4) {
-  animation-delay: 0.2s;
-}
-.result-table tbody tr:nth-child(5) {
-  animation-delay: 0.25s;
-}
-
-/* ──────────────────────────────
-   CÓDIGO DE VALIDADE
-────────────────────────────── */
+/* ── Código de Validade ── (Atualizado - Tamanho Médio) */
 #codigoValidade {
   font-family: var(--font-mono);
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-  border-inline-start: 4px solid var(--brand-blue-mid);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  letter-spacing: 0.8px;
+  border-inline-start: 5px solid var(--brand-blue-mid);
   background: var(--bg-section);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
+  padding: 1.4rem;
+  box-shadow: var(--shadow-sm);
+  margin-block-start: 1rem;
+}
+
+#codigoValidade pre {
+  font-size: 1.12rem;
+  font-weight: 500;
+  background: #1e1e2e;
+  color: #e0e0ff;
   padding: 1.2rem;
+  border-radius: var(--radius-sm);
+  white-space: pre-wrap;
+  word-break: break-all;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 0;
 }
 
 #codigoValidade code {
+  font-size: 1.15rem;
   background: linear-gradient(
     135deg,
     var(--brand-blue) 0%,
     var(--brand-blue-soft) 100%
   );
   color: #fff;
-  padding: 0.5rem 1.1rem;
+  padding: 0.4rem 0.9rem;
   border-radius: var(--radius-sm);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-  box-shadow: var(--shadow-sm);
+  font-weight: 600;
 }
 
-/* ──────────────────────────────
-   ALERTS
-────────────────────────────── */
+/* ── Alerts ── */
 .alert {
   border-radius: var(--radius-sm);
   font-size: 0.9rem;
@@ -658,9 +617,7 @@ section h2::after {
   color: var(--text-secondary);
 }
 
-/* ──────────────────────────────
-   CORES DE STATUS
-────────────────────────────── */
+/* ── Status Colors ── */
 .text-success {
   color: var(--success) !important;
 }
@@ -670,36 +627,28 @@ section h2::after {
 .text-warning {
   color: var(--warning) !important;
 }
-.text-info {
-  color: var(--info) !important;
-}
-.text-muted {
-  color: var(--text-muted) !important;
-}
 
-/* ──────────────────────────────
-   OPTGROUP
-────────────────────────────── */
+/* ── optgroup ── */
 optgroup {
   font-weight: 700;
   font-style: normal;
   color: var(--brand-blue);
   background: var(--bg-card);
 }
+
 optgroup option {
   font-weight: 400;
   color: var(--text-primary);
   background: var(--bg-input);
 }
 
-/* ──────────────────────────────
-   LOADING
-────────────────────────────── */
+/* ── Loading State ── */
 .loading {
   opacity: 0.65;
   pointer-events: none;
   position: relative;
 }
+
 .loading::after {
   content: "";
   position: absolute;
@@ -719,9 +668,7 @@ optgroup option {
   }
 }
 
-/* ──────────────────────────────
-   ANIMAÇÕES
-────────────────────────────── */
+/* ── Animações ── */
 .fade-in {
   animation: fadeIn 0.45s var(--ease-out) both;
 }
@@ -737,101 +684,33 @@ optgroup option {
   }
 }
 
-/* ──────────────────────────────
-   ACESSIBILIDADE
-────────────────────────────── */
-.btn:focus-visible,
-.form-control:focus-visible,
-.form-select:focus-visible {
-  outline: 3px solid rgba(0, 212, 255, 0.55);
-  outline-offset: 2px;
-}
-
-/* ──────────────────────────────
-   FOOTER
-────────────────────────────── */
+/* ── Footer ── */
 .theme-footer {
   background: linear-gradient(135deg, #0d0c2b 0%, #1a1940 100%) !important;
   color: rgba(255, 255, 255, 0.85) !important;
   border-block-start: 1px solid rgba(255, 255, 255, 0.06);
 }
+
 .theme-footer strong {
   color: var(--accent-cyan);
 }
 
-/* ──────────────────────────────
-   PRINT
-────────────────────────────── */
-@media print {
-  .navbar,
-  .btn {
-    display: none !important;
-  }
-  .card {
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
-  }
-  body {
-    background: white !important;
-    color: black !important;
-  }
-}
-
-/* ──────────────────────────────
-   RESPONSIVIDADE
-────────────────────────────── */
-@media (max-width: 768px) {
-  .hero-img-wrap picture img,
-  .hero-image {
-    max-block-size: 42vh;
-  }
-
-  .card-body {
-    padding: 1.25rem;
-  }
-
-  .result-table th,
-  .result-table td {
-    padding: 0.55rem 0.5rem;
-    font-size: 0.82rem;
-  }
-
-  .btn-lg {
-    font-size: 0.95rem;
-    padding: 0.7rem 1.3rem;
-  }
-
-  section h2::after {
-    inline-size: 36px;
-  }
-}
-
+/* ── Responsividade ── */
 @media (max-width: 576px) {
-  .hero-img-wrap picture img,
+  #codigoValidade {
+    font-size: 0.98rem;
+    padding: 1.1rem;
+  }
+  #codigoValidade pre {
+    font-size: 1.02rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
   .hero-image {
-    max-block-size: 32vh;
-  }
-
-  .lead {
-    font-size: 0.95rem;
-  }
-
-  .container {
-    padding-inline-start: 0.75rem;
-    padding-inline-end: 0.75rem;
-  }
-
-  .result-table {
-    font-size: 0.75rem;
-  }
-
-  .result-table th,
-  .result-table td {
-    padding: 0.4rem 0.3rem;
-  }
-
-  #codigoValidade code {
-    font-size: 0.85rem;
-    word-break: break-all;
+    max-block-size: 38vh !important;
   }
 }
